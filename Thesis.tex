@@ -1,0 +1,80 @@
+\documentclass[12pt]{article}
+\usepackage{lingmacros}
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+			\Large
+			\textbf{Procedural Generation Using Noise}\\
+			
+			\vspace{1.5cm}
+			\normalsize
+			\textbf{Michael Li}\\
+			
+			\vfill
+			
+			\textbf{DRAFT 1}
+			
+			\uline{Dr.Dianne Hansford \hfill Director}\\
+			\vspace{1.5cm}
+			\uline{Dr.Yoshihiro Kobayashi \hfill Second Committee Member}\\
+			
+			\vspace{3cm}
+			
+			\includegraphics[scale=.5]{asu_barretthonors_horiz_rgb_maroongold_600ppi}\\
+			\vspace{1.5cm}
+			Ira A. Fulton Schools of Engineering \\
+			School of Computing, Informatics, and Decision Systems Engineering\\
+			Spring 2021
+		\end{center}
+	\end{titlepage}
+	
+	\section*{Abstract}
+	Procedural Content Generation is a method of creating data algorithmically, often using stochastic models. These methods can be used to generate complex environments as opposed to manually creating environments by hand or by using photogrammetric techniques. Procedural generation can use a variety of techniques to achieve a stochastic or partially stochastic goal, including methods such as fractals,  noise, deep learning as examples. \\
+	\clearpage
+	
+
+
+	\tableofcontents
+	\clearpage
+	
+	\section{Introduction}
+		This paper surveys various methods of procedural generation and their applications in generating geological formations. 
+		\subsection{Overview}
+		
+	\section{Height Maps}
+		Talk about usage of heightmaps, weaknesses\\
+		some weakness include - only 2 dimensional geological formations, so archways and caves are not possible \\
+		might be mitigatable by layering multiple different height maps, but increases computation time\\
+		example of practical application in rendering or pre generating voxel space heightmaps 
+	
+	\section{Polygons}
+		\subsection{Rendering Differences }
+		Constructing polygons from height maps, similar problem
+		\subsection{}
+	
+	\section{Voxels}
+		Voxels can be used in a lot of ways to render maps \\
+		Talk about minecraft's storage of voxel terrain data \\
+		Contrast with vooxel rendering techniques
+	\section{}
+		\subsection{Areas of Research}
+		Possible areas of research? \\
+		There is deep learning for procedural generation, but it appears to not be very sophisticated - I cant tell any differences between the deep learning application of noise and just normal perlin noise\\
+		\subsection{Algorithm Advancements}
+		Talk about areas that have been advanced; i.e perlin noise vs simplex noise 
+	
+	\section{Summary}
+	\section{Appendix}
+	\section{References}
+	
+	\LaTeX{} \cite{7522149} is a set of macros built atop \TeX{} \cite{7522149}.
+	\bibliographystyle{plain} % We choose the "plain" reference style
+	\bibliography{refs.bib} % Entries are in the "refs.bib" file
+		
+
+	
+\end{document}
