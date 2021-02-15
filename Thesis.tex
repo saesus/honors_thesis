@@ -1,9 +1,16 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{report}
 \usepackage{lingmacros}
 \usepackage[normalem]{ulem}
+%  Title Formatting 
+\usepackage{titlesec}
 
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
+
+\titleformat{\chapter}[block]
+{\normalfont\huge\bfseries}{\thechapter.}{1em}{\Huge}
+\titlespacing*{\chapter}{0pt}{-19pt}{0pt}
+
 \begin{document}
 	\begin{titlepage}
 		\begin{center}
@@ -32,39 +39,69 @@
 		\end{center}
 	\end{titlepage}
 	
-	\section*{Abstract}
+	\chapter*{Abstract}
+	\addcontentsline{toc}{chapter}{Abstract}
 	Procedural Content Generation is a method of creating data algorithmically, often using stochastic models. These methods can be used to generate complex environments as opposed to manually creating environments by hand or by using photogrammetric techniques. Procedural generation can use a variety of techniques to achieve a stochastic or partially stochastic goal, including methods such as fractals,  noise, deep learning as examples. \\
 	\clearpage
 	
-
-
 	\tableofcontents
+	
 	\clearpage
 	
-	\section{Introduction}
-		This paper surveys various methods of procedural generation and their applications in generating geological formations. 
-		\subsection{Overview}
+	\chapter{Introduction}
+		This paper surveys various methods of procedural generation and their applications in generating geological formations. While procedural generated content can vary in task from generating terrain to creatures and stories, the focus of this paper is primarily on terrain and more specifically geological formations. While procedural generation is often described as being stochastic, in reality it is not entirely so. The majority of the techniques used for procedural generation include some level of user control, as well as a specified input to use as a starting point for the equation. This input, known as a seed is transformed through code to create the output, in this case geological formations. 
 		
-	\section{Height Maps}
+		\section{Overview}
+		
+	\chapter{Mapping}
+		Before the development of more advanced noise generation techniques, some basic procedural generation techniques were used as early as the 1980s. One of the earliest usages of procedural generation was in Rogue
+		% Michael Toy, G.W. Rogue; Epyx: San Francisco, CA, USA, 1980
+		which used a three by three grid in order to generate the layout of the level, with hallways randomly connecting the rooms. Some of these techniques were developed in order to bypass the computational restraints of the time. \\
+		
+		\noindent Perlin noise was developed for use in the movie industry, although it later became a foundation for many other procedural generation algorithms as it provided a lot of control as well as randomness to be used. It was developed in 1983 for use in the sci-fi movie Tron, to map textures onto computer generated surfaces for visual effects. Perlin noise has been used for many different visual elements, ranging from the texture creation it was created for to particle effects such as fire, smoke and clouds, as well as landscapes and geological features. It has a variety of uses due to its ability to create a naturalistic appearance. \\
+		% https://dl.acm.org/doi/10.1145/325165.325247
+		
+		% cellular automata
+		
+		% branching stuff
+		
+		% simple if statements with some level of randomness
+	
+	\chapter{Height Maps}
+		As mentioned previously, Perlin noise can be used to generate height maps in order to pseudo-randomly create geological formations. While heightmaps have the advantage of being two-dimensional and less complicated to run, they have difficulty in rendering a variety of geological formations. Due to the two-dimensional nature of a height map, they are unable to render more complex features such as alcoves, arches, and any other three-dimensional feature. In terms of randomness, this can create a sort of uniformity in geometry, where the only features are hills and valleys. This can be mitigated to some extent by the use of layering Perlin noise.
+		
+		Implementation and how perlin noise works
+		% original source code: https://mrl.cs.nyu.edu/~perlin/doc/oscar.html#noise
+		
+		\noindent While Perlin noise saw great success, it was succeeded by algorithms such as Simplex noise, designed to alleviate some of the problems with Perlin noise. This included the computational complexity and the artifacting in the noise created. 
+		
+		%explain differences http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
+		
+		\noindent Some of the other uses of height maps include the voxel space rendering system, using voxel raster graphics to display three-dimensional geometry with low memory and processing requirements. This was developed in the early 90's, involving a height and color map to position the pixels on the screen. While this technique was not historically used with noise generating algorithms, the rendering system fits the requirements for the use of techniques such as two-dimensional Perlin noise. At the time, displaying complex heightmaps in three-dimensions was difficult computationally, and the voxel space technique allowed this to happen. 
+		% insert demo gif from github
+		% https://github.com/s-macke/VoxelSpace
+		% https://patents.google.com/patent/US6020893 
+		
+		
 		Talk about usage of heightmaps, weaknesses\\
 		some weakness include - only 2 dimensional geological formations, so archways and caves are not possible \\
 		might be mitigatable by layering multiple different height maps, but increases computation time\\
 		example of practical application in rendering or pre generating voxel space heightmaps 
 	
-	\section{Polygons}
-		\subsection{Rendering Differences }
+	\chapter{Polygons}
+		\section{Rendering Differences }
 		Constructing polygons from height maps, similar problem
-		\subsection{}
+		\section{}
 	
-	\section{Voxels}
+	\chapter{Voxels}
 		Voxels can be used in a lot of ways to render maps \\
 		Talk about minecraft's storage of voxel terrain data \\
 		Contrast with vooxel rendering techniques
-	\section{}
-		\subsection{Areas of Research}
+	\chapter{Development}
+		\section{Areas of Research}
 		Possible areas of research? \\
 		There is deep learning for procedural generation, but it appears to not be very sophisticated - I cant tell any differences between the deep learning application of noise and just normal perlin noise\\
-		\subsection{Algorithm Advancements}
+		\section{Algorithm Advancements}
 		Talk about areas that have been advanced; i.e perlin noise vs simplex noise 
 	
 	\section{Summary}
@@ -75,6 +112,8 @@
 	\bibliographystyle{plain} % We choose the "plain" reference style
 	\bibliography{refs.bib} % Entries are in the "refs.bib" file
 		
+		
+	
 
 	
 \end{document}
