@@ -47,10 +47,10 @@
 			
 			\vfill
 			
-			\textbf{DRAFT 1.1.0}
+			\textbf{DRAFT 2.2.0}
 			
 			\uline{Dr.Dianne Hansford \hfill Director}
-			\vspace{1.5cm}
+			\vspace{1cm}
 			
 			\uline{Dr.Yoshihiro Kobayashi \hfill Second Committee Member}
 			
@@ -71,7 +71,7 @@
 	\chapter*{Abstract}
 	
 	\addcontentsline{toc}{chapter}{Abstract}
-	Procedural Content Generation is a method of creating data algorithmically, often using stochastic models. These methods can be used to generate complex environments as opposed to manually creating environments by hand or by using photogrammetric techniques. Procedural generation can use a variety of techniques to achieve a stochastic or partially stochastic goal, including methods such as fractals,  noise, deep learning as examples.
+	Procedural content generation is a method of creating data algorithmically, often using stochastic models. These methods can be used to generate complex environments as opposed to manually creating environments by hand or by using photogrammetric techniques. Procedural generation can use a variety of techniques to achieve a stochastic or partially stochastic goal, including methods such as fractals, noise and deep learning.
 	
 	\clearpage
 	
@@ -82,19 +82,22 @@
 	\let\clearpage\relax
 	\chapter{Introduction}
 	
-		This paper surveys various methods of procedural generation and their applications in generating geological formations. While procedural generated content can vary from terrain to creatures and stories, the focus of this paper is primarily on terrain and more specifically geological formations. One of the most famous cases of this procedural generation for geological formations is in Minecraft, which implements a modified version of Perlin noise in order to generate all of its worlds. Other examples can include games such as the Elder Scrolls II: Daggerfall, which employed various forms of procedural generation to determine the location of non-player characters, the layout of dungeons, as well as the terrain itself. In more complex cases, procedural generation can be used to create fake histories, with the more well known example of Dwarf Fortress. However, procedural generation's applications are not only limited to games. In the creation of the Lord of the Rings movies, procedural generation was applied to help create the many different forms of orcs in the movie, as well as ensuring that each orc was able to be animated. While procedural generation is often described as being stochastic, in reality it is not entirely so. The majority of the techniques used for procedural generation include some level of user control, as well as a specified input to use as a starting point for the equation. This input, known as a seed is transformed through code to create the output, in this case geological formations.
+		This paper surveys various methods of procedural generation and their applications in generating geological formations. While content can vary from terrain to creatures and stories in virtual worlds, the focus of this paper is primarily on terrain and more specifically geological formations. One of the most famous cases of this procedural generation for geological formations is in Minecraft, which implements a modified version of Perlin noise in order to generate all of its worlds \cite{minecraft-gen}. Other examples include games such as the Elder Scrolls II: Daggerfall, which employed various forms of procedural generation to determine the location of non-player characters, the layout of dungeons, as well as the terrain itself \cite{daggerfall}. In more complex cases, procedural generation can be used to create fake histories, with the more well known example of Dwarf Fortress \cite{df-dev}. However, procedural generation's applications are not only limited to games. In the creation of the Lord of the Rings movies, procedural generation was applied to help create the many different forms of orcs in the movie, as well as ensuring that each orc was able to be animated \cite{massive}. While procedural generation is often described as being stochastic, in reality it is not entirely so. The majority of the techniques used for procedural generation include some level of user control, as well as a specified input to use as a starting point for the equation. This input, known as a seed is transformed through code to create the output.
 		
-		The main topic that this paper will cover is the mapping of geological formations. While this can be done through height maps, which are black and white, or colored maps where the colors or intensity of the black/white indicate the height of each point. This acts as a two dimensional representation of the terrain, although it has difficulty in representing structures that have undersides.
+		The main topic that this paper will cover is the creation of geological formations. A geological formation, or just formation a body of rock that possesses some degree of internal consistency or distinctive features \cite{2005}. This allows formations to be separate from the local area it is placed in, while being a marker for the region. For procedural generation, while procedural generation is differentiable in small regions, as a whole it is homogeneous, necessitating features such as formations to distinguish different regions. 
 		
-		\section{Influences}
+		\section{Definitions}
+		proc gen - acronym like PCG - grid idea like in rogue
 		
-		Procedural generation has a history rooted in math, particularly the work involving Brownian motion as well as fractals. Before the development of other procedural generation techniques, some basic procedural generation techniques were used in the 1980s. One of the earliest usages of procedural generation was in Rogue. This initial attempt at generating a dungeon in a random manner addressed some of the differences between procedural generation and purely random generation. Rogue addressed this issue through procedural generation, 1ref using a three by three grid in order to generate the layout of the level, with hallways randomly connecting the rooms. These rooms would have a variable size in order to increase the variety of levels producible by the algorithm. This technique in particular, was created to address the memory constraints of computers at the time, as even with this more mathematical and less memory  intensive approach, levels would need to be cleared from memory when moving on to the next one \cite{rogue}.
+		noise
 		
-		\section{Overview and Definitions}
+		\section{Methods Overview}
 		
-		Procedural generation is often dependent on the use of random numbers, which has varying methods of generation in a computer. There are two strategies for the generation of these random numbers, producing the numbers non-deterministically through the use of unpredictable physical processes, and computing numbers deterministically using an algorithm \cite{rng}. While the determination of this random number is not important for procedural generation, as the necessity of security is less, procedural generation algorithms follow the same methodology as the deterministic random bit generators. In procedural generation, a seed is a random number where the rest of the generation will begin from. This ensures regularity to the procedural generation, by allowing for the algorithm used to have repeatable results. By taking an input seed, it will be modified using an equation to obtain the output, possibly using additional random numbers created after the original seed.
+		Procedural generation is often dependent on the use of random numbers, which has varying methods of generation in a computer. There are two strategies for the generation of these random numbers, producing the numbers non-deterministically through the use of unpredictable physical processes, and computing numbers deterministically using an algorithm \cite{rng}. Procedural generation algorithms follow the same methodology as the deterministic random bit generators. Similarly to deterministic random bit generators, in procedural generation a seed is a random number from which the rest of the algorithm will begin from. This ensures regularity to the procedural generation, since any input number will result in the same set of outputs. By taking an input seed, it will be modified using an equation to obtain the output, possibly using additional random numbers created after the original seed.
 		
-		One of the applications of these random numbers is through the creation of noise. Noise in this application refers to the spreading of values across a coordinate plane. Lattice gradient noise is a commonly used and widespread form of noise. One of the most well known applications of this is Perlin noise, notably developed for Tron, but also applied in games like Minecraft. This form of procedural generation works off of the premise of an integer lattice - a regularly spaced array of points in a square array\cite{integer-lattice}. Pseudo-random numbers are generated and evenly distributed across this lattice, then a low-pass filter is applied in order to smooth the edges between each of these points. The low pass filter's effect is just creating the gradation between each of the lattice points. The result is an image such as the one shown in Figure 1.1.
+		% Perlin noise 1 dimensional figure
+		
+		One of the applications of these random numbers is through the creation of noise. Noise in this application refers to the spreading of values across a coordinate plane. While noise and PCG are related, noise refers to the creation of the stochastic values, where PCG refers to the application of these values. Lattice gradient noise is a commonly used and widespread form of noise. One of the most well known applications of this is Perlin noise, notably developed for use in Tron to create textures to allow for more realistic, interesting and believable effects and images \cite{ken-perlin}. This form of noise creation works off of the premise of an integer lattice - a regularly spaced array of points in a square array\cite{integer-lattice}. Pseudo-random numbers are generated and evenly distributed across this lattice, then a low-pass filter is applied in order to smooth the edges between each of these points. A low-pass filter in this application helps to smooth the created lattice by averaging nearby values to reduce the difference between neighboring values. This creates a blurring effect, with fewer large value changes. The low-pass filter's effect is just creating the gradation between each of the lattice points. The result is an image such as the one shown in Figure 1.1.
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -103,7 +106,16 @@
 			\label{fig:fig1}
 		\end{minipage}
 
-		Fractal landscapes is another approach at procedural generation. Fractal geometry being applied to landscapes began with studies of map data and research on the similarities between fractals and the data. Fractals prove as a relevant approach to representing geographical data due to the self similarity and the subdivision of space, made easier by fractal surfaces \cite{doi:10.1111/j.1467-8306.1987.tb00158.x}. This provides a method of predicting or as an initial hypothesis for landscapes in study. The technique works primarily from the subdivision of space combined with random numbers for each of the vertices created from the subdivision \cite{fractal-land}. Similarly to Perlin noise, this technique often utilizes a seed random number to start from, in order to make the results reproducible. However, while fractals are very computationally efficient, the parameter that makes this seed is very sensitive to change. Very small changes will completely change the features of a map designed this way.
+		Fractal landscapes is another approach at procedural generation. Fractal geometry being applied to landscapes began with studies of map data and research on the similarities between fractals and the data. Fractals prove as a relevant approach to representing geographical data due to the self similarity and the subdivision of space, made easier by fractal surfaces \cite{doi:10.1111/j.1467-8306.1987.tb00158.x}. This provides a method of predicting or as an initial hypothesis for landscapes in study. The technique works primarily from the subdivision of space combined with random numbers for each of the vertices created from the subdivision \cite{fractal-land}. In figure 1.2, the four corner points act as the initially chosen vertices, and the vertices in the newly created plus shape are the vertices to randomly raise or lower. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=1]{landscapes}
+			\captionof{figure}{Spatial Subdivision. \cite{fractal-land}}
+			\label{fig:fig12}
+		\end{minipage}
+		
+		Similarly to Perlin noise, this technique often utilizes a seed random number to start from, in order to make the results reproducible. However, while fractals are very computationally efficient, the parameter that makes this seed is very sensitive to change. Very small changes will completely change the features of a map designed this way.
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -113,8 +125,17 @@
 		\end{minipage}
 		
 		Another method of generating terrain revolves around the use of cellular automata. define cellular automata. Cellular automata works on a grid of cells, similarly to how noise is mapped, but instead of having a continuous value, the cells in this approach only have binary values, or similar. This approach relies of having the information of neighbors and the states of their neighbors to determine surrounding cells to then modify their states \cite{nature-of-code}. This can be used in conjunction with a tiling system in order to procedurally generate worlds, albeit with pre-determined cells for usage. This approach was demonstrated with a two-dimensional cave system in order to show the possibilities \cite{10.1145/1814256.1814266}.
+		
+		\section{Displaying Noise}
 	
-		Representing the data generated procedurally is another task with a variety of solutions. Some of these methods include pixel based methods, polygons and voxels. One common, simplistic way to represent the data generated is to use ASCII characters, or other types of two dimensional data such as colored pixels in order to convey the scene that is being represented. In the case of Dwarf Fortress, the use of color and text symbols is used to represent the graphics of the game, with examples such as letters representing animals, or other characters representing terrain elements. 
+		Representing the data generated procedurally is another task with a variety of solutions. Some of these methods include pixel based methods, polygons and voxels. One common, simplistic way to represent the data generated is to use ASCII characters, or other types of two dimensional data such as colored pixels in order to convey the scene that is being represented. In the case of Dwarf Fortress, the use of ASCII symbols is used to represent the elements within the game, shown in figure 1.4.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{dwarf_fortress}
+			\captionof{figure}{ASCII representation of PCG. \cite{df-dev}}
+			\label{fig:fig13}
+		\end{minipage}
 		
 		Another of the ways of representing three-dimensional objects is through the use of polygon meshes. These are created through polygons (typically triangles) joined by at least two vertices. These polygons are then represented by the coordinates of the vertices that compose them, while the space between the vertices acts as the viewable portion.
 		
@@ -128,43 +149,27 @@
 		
 		Perlin noise was developed for use in the movie industry, although it later became a foundation for many other procedural generation algorithms as it provided a lot of control as well as randomness to be used. It was developed in 1983 for use in the sci-fi movie Tron, to map textures onto computer generated surfaces for visual effects. Perlin noise has been used for many different visual elements, ranging from the texture creation it was created for to particle effects such as fire, smoke and clouds, as well as landscapes and geological features. It has a variety of uses due to its ability to create a naturalistic appearance \cite{10.1145/325165.325247}.
 
-		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s, but developed in the decades to come as fractal geometry is able to capture surface topography in a way that other methods do not. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. 
+		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s, but developed in the decades to come as fractal geometry is able to capture surface topography in a way that other methods do not. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. However, this early PCG found its use in \emph{Star Trek II: The Wrath of Khan}to help develop planets that do not exist. This technology was used later on in an accompaniment to a SIGGRAPH paper to demonstrate more of the ability of fractals. This set the stage for later movies and projects such as \emph{The Last Starfighter} and \emph{Return of the Jedi} \cite{ibm-fractal}. 
 		
-	\vspace{10pt}
-	\let\clearpage\relax
-	\chapter{Image Based Methods}
-	
-		Some of the other uses of height maps include the voxel space rendering system, using voxel raster graphics to display three-dimensional geometry with low memory and processing requirements. This was developed in the early 90's, involving a height and color map to position the pixels on the screen. While this technique was not historically used with noise generating algorithms, the rendering system fits the requirements for the use of techniques such as two-dimensional Perlin noise. At the time, displaying complex height-maps in three-dimensions was difficult computationally, and the voxel space technique allowed this to happen. 
+		One of the earliest usages of PCG in video games was in Rogue \cite{rogue}. This initial attempt at generating a dungeon in a random manner addressed some of the differences between procedural generation and purely random generation, by introducing some level of control to the designer. Rogue addressed this by using a three by three grid in order to generate the layout of the level, with hallways randomly connecting the rooms. These rooms would have a variable size in order to increase the variety of levels producible by the algorithm. This technique in particular, was created to address the memory constraints of computers at the time, as even with this more mathematical and less memory intensive approach, levels would need to be cleared from memory when moving on to the next one \cite{rogue}.
 		
-		The voxel space rendering engine originally utilized a pre-made height and color map to render from. This, combined with a tiling effect and knowledge of the field-of-view of the user's position allowed for a simplified three-dimensional rendering system. Starting from the furthest position to guarantee occlusion, a line on the map is determined in the triangular field of view. This is scaled with perspective projection, and a vertical line is drawn at every point on the screen from the section of the color map. The height of the vertical line is determined from the height drawn from the two-dimensional height map. Then, this is repeated until the entire field-of-view is drawn. This technique can be seen in Figure 3.1. 
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.2]{line-by-line}
-			\captionof{figure}{Basic rasterization technique of the Voxel Space Engine. \cite{voxel-space}}
-			\label{fig:fig3}
-		\end{minipage}
-	
-		This can be optimized with drawing from front-to-back with the addition of a y-buffer in order to determine the highest y position to draw. However, the voxel-space rendering system has a downside of having fewer pixels to determine the colors and heights of closer landmasses. This creates a pixellated effect for the foreground, while the background is rendered in higher detail. This method can be seen in more detail in Figure 3.2. 
-		 
-		\begin{minipage}{\textwidth}
-		 	\centering
-		 	\includegraphics[scale=0.5]{US6020893A}
-		 	\captionof{figure}{US Patent 6 020 893 \cite{US6020893}}
-		 	\label{fig:fig4}
-		\end{minipage}
-		
-		This weakness can be mitigated in some effect by having multiple heightmaps of differing detail to draw from. This would mitigate some of the advantage of voxel space rendering in increasing the rendering time and processing required for the algorithm. In addition to the weakness in rendering closer objects, height maps are also unable to render more complex geological formations, such as caves, archways or overhangs. Later iterations of the voxel space rendering engine worked around some of these limitations by introducing rendering of both polygons and voxels. Another possible workaround to the low resolution of the voxel space rendering system would be using procedurally generated noise as the platform for creating height maps. By creating the height map dynamically from noise, the memory used for storing the program overall would be smaller, and the resolution would not be constrained, as for areas closer to the camera, the interpolation between the points of the noise map would just be decreased. 
-	
 	\vspace{10pt}
 	\let\clearpage\relax
 	\chapter{Height Maps}
 	
-		As mentioned previously, Perlin noise can be used to generate height maps in order to pseudo-randomly create geological formations. While height-maps have the advantage of being two-dimensional and less complicated to run, they have difficulty in rendering a variety of geological formations. Due to the two-dimensional nature of a height map, they are unable to render more complex features such as alcoves, arches, and any other three-dimensional feature. In terms of randomness, this can create a sort of uniformity in geometry, where the only features are hills and valleys. In signal terms, this means that noise is band-limited, where almost all of the energy of the noise is concentrated in a very small part of the frequency spectrum. An example of this would be imagining an image with only black or white squares, then that same image with a guassian kernel applied to it. The high and low frequencies of the original image would be blended out, and only the band-limited output image would remain, where the high and low frequencies contribute less to the total energy \cite{making-noise}. This can be mitigated to some extent by the use of layering differing octaves of noise in order to increase the amount of variation given by the noise. 
+		Perlin noise can be used to generate height maps in order to pseudo-randomly create geological formations. While height-maps have the advantage of being two-dimensional and less complicated to run, they have difficulty in rendering a variety of geological formations. Due to the two-dimensional nature of a height map, they are unable to render more complex features such as alcoves, arches, and any other three-dimensional feature. In terms of randomness, this can create a sort of uniformity in geometry, where the only features are hills and valleys. In signal terms, this means that noise is band-limited, where almost all of the energy of the noise is concentrated in a very small part of the frequency spectrum. An example of is shown in figure 3.1, where applying a band-limiting effect smooths out the function.
 		
-		The original implementation of Perlin noise was to create representations of various textures for objects, as well as representations of clouds, fire, water and stars among other things \cite{10.1145/325165.325247}. The computation of this noise in three-dimensions is determined by computing the pseudo-random gradient at the eight nearest vertices on an integer cube. In other words, given an input point P, look at the surrounding points on the grid. In one dimension, this would be a series of line segments. 
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{bandlimiting-filter}
+			\captionof{figure}{Applying a band-limiting filter \cite{bandlimiter}}
+			\label{fig:fig5}
+		\end{minipage}
 		
-		% might need to be replaced
+		The high and low frequencies of the original image would be blended out, and only the band-limited output image would remain, where the high and low frequencies contribute less to the total energy \cite{making-noise}. This can be mitigated to some extent by the use of layering differing octaves of noise in order to increase the amount of variation given by the noise. 
+		
+		The original implementation of Perlin noise was to create representations of various textures for objects, as well as representations of clouds, fire, water and stars among other things \cite{10.1145/325165.325247}. In other words, given an input point P, look at the surrounding points on the grid. In one dimension, this would be a series of line segments. 
+
 		\begin{minipage}{\textwidth}
 			\centering
 			\includegraphics[scale=.5]{noise-value-vs-perlin3}
@@ -179,7 +184,7 @@
 			define s_curve(t) ( t * t * (3. - 2. * t) )
 		\end{lstlisting}
 		% cite? https://mrl.cs.nyu.edu/~perlin/doc/oscar.html#noise
-	
+		
 		This was the original equation used for Perlin noise, but has since been superceeded. One of the problems with the previous equation used was that the second derivative of the function, \textbf{6-12t} is not zero at either \textbf{t=0} or \textbf{t=1}, causing discontinuities in the noise. Some of the effects of this are shown in Figure 4.2. This led to the equation shown below to be used. 
 		
 		\begin{lstlisting}[language=Java]
@@ -187,7 +192,7 @@
 			static double fade(double t) { return t * t * t * (t * (t * 6 - 15) + 10); }
 		\end{lstlisting}
 		% cite? https://mrl.cs.nyu.edu/~perlin/noise/
-	
+		
 		This new equation led to an approximate ten percent speed increase compared to the original implementation. 
 		
 		\begin{minipage}{\textwidth}
@@ -199,6 +204,41 @@
 		
 		While Perlin noise saw great success, it was succeeded by algorithms such as Simplex noise, designed to alleviate some of the problems with Perlin noise. This included the computational complexity and the artifacting in the noise created. The artifacting in the noise appears from the necessity for the gradients to pass through zero, as shown in Figure 4.1. This causes unavoidable artifacting in the noise. In addition, while Perlin noise's computational complexity is acceptable when in three-dimensional space and lower, it suffers greatly from increasing the dimensionality further.
 		
+		
+	% COME BACK HERE TO FIX IMAGE BASED METHODS
+	
+	\vspace{10pt}
+	\let\clearpage\relax
+	\chapter{Image Based Methods}
+	
+		Some of the other uses of height maps include the voxel space rendering system, using voxel raster graphics to display three-dimensional geometry with low memory and processing requirements. This was developed in the early 90's, involving a height and color map to position the pixels on the screen. While this technique was not historically used with noise generating algorithms, the rendering system fits the requirements for the use of techniques such as two-dimensional Perlin noise. By using Perlin noise, the height and color maps can be generated at run-time instead of being created beforehand. An example of this is shown in figure 4.1. At the time, displaying complex height-maps in three-dimensions was difficult computationally, and the voxel space technique allowed this to happen. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.15]{proc-voxel}
+			\captionof{figure}{Rendering using the Voxel Space engine with a height and color map generated by Perlin noise.}
+			\label{fig:fig14}
+		\end{minipage}
+		
+		The voxel space rendering engine originally utilized a pre-made height and color map to render from. This, combined with a tiling effect and knowledge of the field-of-view of the user's position allowed for a simplified three-dimensional rendering system. Starting from the furthest position to guarantee occlusion, a line on the map is determined in the triangular field of view. This is scaled with perspective projection, and a vertical line is drawn at every point on the screen from the section of the color map. The height of the vertical line is determined from the height drawn from the two-dimensional height map. Then, this is repeated until the entire field-of-view is drawn. This technique can be seen in Figure 3.1. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.2]{line-by-line}
+			\captionof{figure}{Basic rasterization technique of the Voxel Space engine. \cite{voxel-space}}
+			\label{fig:fig3}
+		\end{minipage}
+	
+		This can be optimized with drawing from front-to-back with the addition of a y-buffer in order to determine the highest y position to draw. However, the voxel-space rendering system has a downside of having fewer pixels to determine the colors and heights of closer landmasses. This creates a pixellated effect for the foreground, while the background is rendered in higher detail. This method can be seen in more detail in Figure 3.2. 
+		 
+		\begin{minipage}{\textwidth}
+		 	\centering
+		 	\includegraphics[scale=0.5]{US6020893A}
+		 	\captionof{figure}{US Patent 6 020 893 \cite{US6020893}}
+		 	\label{fig:fig4}
+		\end{minipage}
+		
+		This weakness can be mitigated in some effect by having multiple heightmaps of differing detail to draw from. This would mitigate some of the advantage of voxel space rendering in increasing the rendering time and processing required for the algorithm. In addition to the weakness in rendering closer objects, height maps are also unable to render more complex geological formations, such as caves, archways or overhangs. Later iterations of the voxel space rendering engine worked around some of these limitations by introducing rendering of both polygons and voxels. Another possible workaround to the low resolution of the voxel space rendering system would be using procedurally generated noise as the platform for creating height maps. By creating the height map dynamically from noise, the memory used for storing the program overall would be smaller, and the resolution would not be constrained, as for areas closer to the camera, the interpolation between the points of the noise map would just be decreased. 	
 
 	\vspace{10pt}
 	\let\clearpage\relax	
@@ -236,6 +276,7 @@
 		While the success of Minecraft has made it the atypical example of procedural generation rendered using voxels, the representation of voxels as cubes stacked in space is not accurate to the greater definition of the voxels being points in space. Minecraft does use a voxel system to store the points in space as data, indexed by an YZX system for compression \cite{minecraft-voxel}. However, Minecraft's rendering system is based around a polygon system in order to display the individual blocks. 
 		
 		\section{Examples}
+		
 	
 	\vspace{10pt}
 	\let\clearpage\relax
