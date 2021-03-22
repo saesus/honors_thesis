@@ -87,17 +87,22 @@
 		The main topic that this paper will cover is the creation of geological formations. A geological formation, or just formation a body of rock that possesses some degree of internal consistency or distinctive features \cite{2005}. This allows formations to be separate from the local area it is placed in, while being a marker for the region. For procedural generation, while procedural generation is differentiable in small regions, as a whole it is homogeneous, necessitating features such as formations to distinguish different regions. 
 		
 		\section{Definitions}
-		proc gen - acronym like PCG - grid idea like in rogue
+		PGC (procedurally generated content) refers to the use of algorithms to generate features including stories, characters, animals but specifically focusing on geological formations and terrain for this paper. To qualify as PGC, the result of the algorithm must be reproducable and modifiable. The reproducible criteria for PGC can be fulfilled by the use of seeding, whereas the modifiable criteria is fulfulled by the use of parameters to modify the algorithm. While noise is related to PGC, it has several notable differences. Noise refers to the process often used for the creation of PGC, as it stochastically creates values. While these values can be seeded and be reproducible similarly to PGC, noise focuses on the stochastic portion, while PGC often necessitates additional processing in order to generate the content portion. Fully randomized noise is not modifiable by the user, and does not show any consistency in the end product. This can be seen below, in figure 1.1, where the result of noise, can fulfill the requirements of PCG, PCG will not always fulfill the requirements of noise, due to the additional processing. 
 		
-		noise
+
 		
 		\section{Methods Overview}
 		
 		Procedural generation is often dependent on the use of random numbers, which has varying methods of generation in a computer. There are two strategies for the generation of these random numbers, producing the numbers non-deterministically through the use of unpredictable physical processes, and computing numbers deterministically using an algorithm \cite{rng}. Procedural generation algorithms follow the same methodology as the deterministic random bit generators. Similarly to deterministic random bit generators, in procedural generation a seed is a random number from which the rest of the algorithm will begin from. This ensures regularity to the procedural generation, since any input number will result in the same set of outputs. By taking an input seed, it will be modified using an equation to obtain the output, possibly using additional random numbers created after the original seed.
 		
-		% Perlin noise 1 dimensional figure
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.3]{perlinnoise}
+			\captionof{figure}{Using the same set of input random numbers and the same algorithm, Perlin noise will always replicate this result.}
+			\label{fig:fig15}
+		\end{minipage}
 		
-		One of the applications of these random numbers is through the creation of noise. Noise in this application refers to the spreading of values across a coordinate plane. While noise and PCG are related, noise refers to the creation of the stochastic values, where PCG refers to the application of these values. Lattice gradient noise is a commonly used and widespread form of noise. One of the most well known applications of this is Perlin noise, notably developed for use in Tron to create textures to allow for more realistic, interesting and believable effects and images \cite{ken-perlin}. This form of noise creation works off of the premise of an integer lattice - a regularly spaced array of points in a square array\cite{integer-lattice}. Pseudo-random numbers are generated and evenly distributed across this lattice, then a low-pass filter is applied in order to smooth the edges between each of these points. A low-pass filter in this application helps to smooth the created lattice by averaging nearby values to reduce the difference between neighboring values. This creates a blurring effect, with fewer large value changes. The low-pass filter's effect is just creating the gradation between each of the lattice points. The result is an image such as the one shown in Figure 1.1.
+		One of the applications of these random numbers is through the creation of noise. Lattice gradient noise is a commonly used and widespread form of noise. One of the most well known applications of this is Perlin noise, notably developed for use in Tron to create textures to allow for more realistic, interesting and believable effects and images \cite{ken-perlin}. This form of noise creation works off of the premise of an integer lattice - a regularly spaced array of points in a square array\cite{integer-lattice}. Pseudo-random numbers are generated and evenly distributed across this lattice, then a low-pass filter is applied in order to smooth the edges between each of these points. A low-pass filter in this application helps to smooth the created lattice by averaging nearby values to reduce the difference between neighboring values. This creates a blurring effect, with fewer large value changes. The low-pass filter's effect is just creating the gradation between each of the lattice points. The result is an image such as the one shown in Figure 1.2.
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -106,7 +111,7 @@
 			\label{fig:fig1}
 		\end{minipage}
 
-		Fractal landscapes is another approach at procedural generation. Fractal geometry being applied to landscapes began with studies of map data and research on the similarities between fractals and the data. Fractals prove as a relevant approach to representing geographical data due to the self similarity and the subdivision of space, made easier by fractal surfaces \cite{doi:10.1111/j.1467-8306.1987.tb00158.x}. This provides a method of predicting or as an initial hypothesis for landscapes in study. The technique works primarily from the subdivision of space combined with random numbers for each of the vertices created from the subdivision \cite{fractal-land}. In figure 1.2, the four corner points act as the initially chosen vertices, and the vertices in the newly created plus shape are the vertices to randomly raise or lower. 
+		Fractal landscapes is another approach at procedural generation. Fractal geometry being applied to landscapes began with studies of map data and research on the similarities between fractals and the data. Fractals prove as a relevant approach to representing geographical data due to the self similarity and the subdivision of space, made easier by fractal surfaces \cite{doi:10.1111/j.1467-8306.1987.tb00158.x}. This provides a method of predicting or as an initial hypothesis for landscapes in study. The technique works primarily from the subdivision of space combined with random numbers for each of the vertices created from the subdivision \cite{fractal-land}. In figure 1.3, the four corner points act as the initially chosen vertices, and the vertices in the newly created plus shape are the vertices to randomly raise or lower. 
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -133,7 +138,7 @@
 		\begin{minipage}{\textwidth}
 			\centering
 			\includegraphics[scale=.5]{dwarf_fortress}
-			\captionof{figure}{ASCII representation of PCG. \cite{df-dev}}
+			\captionof{figure}{ASCII representation of PGC. \cite{df-dev}}
 			\label{fig:fig13}
 		\end{minipage}
 		
@@ -203,9 +208,6 @@
 		\end{minipage} 
 		
 		While Perlin noise saw great success, it was succeeded by algorithms such as Simplex noise, designed to alleviate some of the problems with Perlin noise. This included the computational complexity and the artifacting in the noise created. The artifacting in the noise appears from the necessity for the gradients to pass through zero, as shown in Figure 4.1. This causes unavoidable artifacting in the noise. In addition, while Perlin noise's computational complexity is acceptable when in three-dimensional space and lower, it suffers greatly from increasing the dimensionality further.
-		
-		
-	% COME BACK HERE TO FIX IMAGE BASED METHODS
 	
 	\vspace{10pt}
 	\let\clearpage\relax
@@ -364,11 +366,6 @@
 	\chapter{Summary}
 		
 		While procedural generation has a background based in signals processing and mathematics, its usage has extended far beyond these fields in the creation of procedurally generated worlds, stories, characters and more. The procedural generation of geological formations in particular is a difficult problem, as rendering and storing the terrain data in memory proves to be a challenge for any approach of procedural generation. In recent years, the voxel approach has supplanted previous techniques and has become more widespread. However, the fundamental algorithms and processes to creat enoise have remained largely the same, with improvements. Some of these techniques include Perlin noise, Fractal Geometry and Cellular Automata. These techniques have been used to create different sorts of maps in attempts to create two and three-dimensional landscapes. In order to render the data created from these processes, image-based, polygonal and voxel techniques have been applied, with varying strengths and weaknesses. Image-based techniques have the advantage of low computational requirements and simplicity of implementation, but have the drawbacks of being reliant on either a pre-determined, procedurally generated image, or having an excess of pseudo-random algorithms always running in the background. In contrast, while polygons are a common method for rendering non procedurally generated games, it has several drawbacks with a randomly created space. Interpreting the data from this space becomes a challenge, as well as creating more three-dimensional structures, as polygons have difficulty in creating certain slopes and landscape geometries. Voxels alleviate the problems in geometric representation, but come with the downsides of excessive processing and memory usage, in addition to having issues with tiling. However, for all of these methods, several advancements have been made to mitigate or address these issues. 
-
-		
-%	\vspace{10pt}
-%	\let\clearpage\relax
-%	\chapter{Appendix}
 	
 	\newpage
 	\renewcommand{\bibname}{References}
