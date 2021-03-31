@@ -38,6 +38,7 @@
 	autogobble=true
 }
 
+
 \begin{document}
 	\begin{titlepage}
 		\begin{center}
@@ -50,7 +51,7 @@
 			
 			\vfill
 			
-			\textbf{DRAFT 3.0.2}
+			\textbf{DRAFT 3.1.3}
 			
 			\uline{Dianne Hansford, Ph.D \hfill Director}
 			\vspace{1cm}
@@ -85,19 +86,18 @@
 	\let\clearpage\relax
 	\chapter{Introduction}
 		
-		Procedural generation is an often hidden, yet common feature among digital content, as it automates the creation of large amounts of data. Often, this is hidden in the backgrounds of movies and video games, as well as other digital art - adding subtle texture and variation to the terrain. However, procedural generation is not just limited to the creation of environments or texture. There are many possibilities given the right modification of the algorithm, with some examples being the generation of stories, histories, particle effects, and characters. One of the most famous cases of this procedural generation for entire worlds is Minecraft \cite{minecraft-gen}. Other examples of procedural generation's varied uses includes games such as The Elder Scrolls II: Daggerfall, which employs various forms of procedural generation to determine the location of non-player characters, the layout of dungeons, as well as the terrain itself \cite{daggerfall}. In more complex cases, procedural generation is used to create fake histories, with the more well-known example of Dwarf Fortress \cite{df-dev}. However, procedural generation's applications are not only limited to games. In The Lord of the Rings, many of the scenes with large amounts of characters were created using procedural generation, ensuring individual animations of the slightly differentiated characters \cite{massive}.
+		Procedural generation is an often hidden, yet common feature among digital content, as it automates the creation of large amounts of data. Often, this is hidden in the backgrounds of movies and video games, as well as other art - adding subtle texture and variation. There are many possibilities to procedural generation given the right modification of the algorithm, with some examples of possible outcomes being the generation of stories, histories, particle effects, and characters. One of the most famous cases of this procedural generation for entire worlds is Minecraft \cite{minecraft-gen}. Other examples of procedural generation's varied uses includes games such as The Elder Scrolls II: Daggerfall, which employs various forms of procedural generation to determine the location of non-player characters, the layout of dungeons, as well as the terrain itself \cite{daggerfall}. In more complex cases, procedural generation is used to create fake histories, with the more well-known example of Dwarf Fortress \cite{df-dev}. However, procedural generation's applications are not only limited to games. In The Lord of the Rings, many of the scenes with large amounts of characters were created using procedural generation, ensuring individual animations of the slightly differentiated characters \cite{massive}.
 		
-		This paper surveys various methods and examples of procedural generation of content and their applications in generating geological formations. PGC (procedurally generated content) refers to the use of computers to create data. This data's interpretation leads to the creation of content, some examples of which are given above. The data creation can be described as algorithmic, as it uses a controlled randomness in order to create the values to be interpreted. Some examples of the processes to create these data values include conditional statements, noise, fractals, as well as cellular automata. These methods can be mixed and matched in any number of ways as well, to fine-tune different outcomes, or to add variety to content. To qualify as PGC, the algorithm to create data must be modifiable and controllable, while the results from the algorithm must be reproducible. The reproducible criteria for PGC can be fulfilled by the use of deterministically random number generators, but some forms of procedural algorithms are majority governed by randomness. In the case of near complete randomness, the reproducibility of PGC comes from the limited number of actions that are taken, not necessarily the exact order of the actions. The modifiable criteria is fulfilled by the use of parameters to modify the algorithm. A deterministic system is a system in which no randomness is involved, while a stochastic system is one that can be described by a random probability distribution. While these concepts may seem to be mutually exclusive, they occupy different portions of the overall procedural generation pipeline, allowing them to co-exist. A geological formation, or just formation is a body of rock that possesses some degree of internal consistency or distinctive features \cite{2005}. This allows geological formations to be separate from the region it is placed in while still being a landmark for the region as a whole. Just as sand is individually different at a small scale, so too is the data created by procedural generation. However, when viewed as a whole, there is little difference between each grain. This necessitates user control and adjustments in order to make a region stand out versus another, with the use of landmarks or geological formations.
+		This paper surveys various methods and examples of the procedural generation of content and their applications in generating geological formations and the surrounding terrain. PGC (procedurally generated content) refers to the use of computers to algorithmically create data using a pseudo-random method, which is then interpreted into content. Some examples of the procedural algorithms to create this data includes noise, fractals, as well as cellular automata. These methods can be mixed and matched in any number of ways to fine-tune different outcomes, or to add variety to content. To qualify as PGC, the algorithm to create data must be modifiable and controllable, while the results from the algorithm must be reproducible. The reproducible criteria for PGC can be fulfilled by the use of deterministic random number generators (See \autoref{sec:rng}), but some forms of procedural algorithms are majority governed by randomness. In the case of near complete randomness, the reproducibility of PGC comes from the limited number of actions that are taken, not necessarily the exact order of the actions. The modifiable criteria is fulfilled by the use of parameters to modify the algorithm. A deterministic system is a system in which no randomness is involved, while a stochastic system is one that can be described by a random probability distribution. While these concepts may seem to be mutually exclusive, they occupy different portions of the overall procedural generation pipeline, allowing them to co-exist. A geological formation, or just formation is a body of rock that possesses some degree of internal consistency or distinctive features \cite{2005}. This allows geological formations to be separate from the region it is placed in while still being a landmark for the region as a whole. Just as sand is individually different at a small scale, so too is the data created by procedural generation. However, when viewed as a whole, there is little difference between each grain. This necessitates user control and adjustments in order to make a region stand out versus another, with the use of landmarks or geological formations.
 		
-		\section{Seeding and Generation}
+		\section{Seeding and Generation} \label{sec:rng}
 		
-		PGC is often dependent on the use of random numbers, which has varying methods of generation in a computer. Random numbers may be generated through two methods, non-deterministically through the use of unpredictable physical processes, and computing numbers deterministically using an algorithm \cite{rng}. These methods are known as random bit generators, known as DRGB (Deterministic Random Bit Generator), and NRBG (Non-deterministic Random Bit Generator). PGC algorithms follow the same methodology as DRBGs. In PGC, a seed is a random number from which the rest of the algorithm will begin from, determining the final outcome of the procedural generation method. This seed is a commonality between different procedural generation algorithms. Similarly, DRGBs use a seed in order to ensure that the same random numbers will always be created in order when using the seed. In procedural generation, the seed ensures the criteria for procedural generation to be reproducible, acting as a soft limit to the amount of randomness that can be created, since seeds are often relatively shorter in size, or constrained by the limits of memory. This seed number, as the starting point, will only have meaning in the context of the same algorithm it is being used in - changing the algorithms and/or manipulating the seed will change the entire output. This ensures regularity to the PGC in a static environment, since any input number will result in the same set of outputs using the same procedural generation methodology. By taking an input seed, it will be modified using an equation to obtain the output, possibly using additional random numbers created after the original seed. For PGC, an output can range from a character, to a story, to terrain, but this paper focuses on the generation of geological formations and the surrounding topography.
+		PGC is often dependent on the use of random numbers. Random numbers may be generated through two methods for computers, non-deterministically through the use of unpredictable physical processes, and deterministically using an algorithm \cite{rng}. These methods are also known as random bit generators, DRGB (Deterministic Random Bit Generator) and NRBG (Non-deterministic Random Bit Generator). PGC algorithms follow the same methodology as DRBGs. In PGC, a seed is a random number from which the rest of the algorithm will begin from, determining the final outcome of the procedural generation method. This seed is a commonality between different procedural generation algorithms. Similarly, DRGBs use a seed in order to ensure that the same random numbers will always be created in order when using the seed. In procedural generation, the seed ensures the criteria for procedural generation to be reproducible, acting as a soft limit to the amount of randomness that can be created, since seeds are often relatively short in size. This seed number, as the starting point, will only have meaning in the context of the same algorithm it is being used in - changing the algorithms and/or manipulating the seed will change the entire output. This ensures regularity and controlled randomness to the PGC in a static environment, since any input number will result in the same set of outputs using the same procedural generation methodology. By taking an input seed, it will be modified using an procedural algorithm to obtain the output, possibly using additional random numbers created after the original seed. By using a DRGB, the creation of these numbers will be static, as the "seed" for a DRGB will determine the sequence of random numbers that it returns.
 	
 		\section{Methods Overview}
 		This section will briefly cover some procedural generation techniques as well as an introduction to their methods and usage. These will be further elaborated on later, with additional details in their application and quirks in PGC. 
-		% Add stuff about markov chains and stuff
 		
-		Noise is a method of creating PGC, using the seeding method to manipulate and control the outcome. Lattice gradient noise is a commonly used and widespread form of noise. This form of noise creation works off of the premise of an integer lattice - a regularly spaced array of points in a square array \cite{integer-lattice}. One of the most well-known applications of this is Perlin noise, notably developed for use in Tron to create textures to allow for more realistic, interesting and believable effects and images \cite{ken-perlin}. Pseudo-random numbers are generated and evenly distributed across this lattice, then a low-pass filter is applied to smooth the edges between each of these points. A low-pass filter in this application helps to smooth the created lattice by averaging nearby values, shown in \autoref{fig:lpf}. 
+		Noise is a method of creating PGC, using the seeding method to manipulate and control the outcome. Lattice gradient noise is a commonly used and widespread form of noise. This form of noise creation works off of the premise of an integer lattice - a regularly spaced array of points in a square array \cite{integer-lattice}. One of the most well-known applications of this is Perlin noise, notably developed for use in Tron \cite{tron} to create textures to allow for more realistic, interesting and believable effects and images \cite{ken-perlin}. Pseudo-random numbers (referring to numbers created by a DRGB) are generated and evenly distributed across this lattice, then a low-pass filter is applied to smooth the edges between each of these points. A low-pass filter in this application helps to smooth the created lattice by averaging nearby values, shown in \autoref{fig:lpf}. 
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -128,16 +128,16 @@
 		
 		\begin{minipage}{\textwidth}
 			\centering
-			\includegraphics[scale=.5]{fractal-noise}
+			\includegraphics[scale=.4]{fractal-noise}
 			\captionof{figure}{Fractal procedural generation example \cite{fractal-land}}
 			\label{fig:fractal-land}
 		\end{minipage}
 		
-		Another method of generating terrain and other features such as caves \cite{10.1145/1814256.1814266} revolves around the use of cellular automata. A cellular automata is a model of a system of cell objects with three characteristics. The cells must be on a regularly spaced grid, regardless of dimensionality. In addition, these cells much each have a state, which can describe any number of features for each individual cell. Lastly, each cell must have a neighborhood. While typically a neighborhood is composed of only the adjacent cells, it can be defined in any number of ways. This approach relies on having the information of neighbors and the states of their neighbors to determine surrounding cells to then modify their states \cite{nature-of-code}. This can be used in conjunction with a tiling system to procedurally generate worlds, albeit with pre-determined cells for usage.
+		Another method of generating terrain and other features such as caves \cite{10.1145/1814256.1814266} revolves around the use of cellular automata. A cellular automata is a model of a system of cell objects with three characteristics. The cells must be placed on a regularly spaced grid, regardless of dimensionality. In addition, these cells must each have a state, which can describe any number of features for each individual cell. Lastly, each cell must have a neighborhood. While typically a neighborhood is composed of only the adjacent cells, it can be defined in any number of ways. This approach relies on having the information of neighbors and the states of their neighbors to determine surrounding cells to then modify their states \cite{nature-of-code}. This can be used in conjunction with a tiling system to procedurally generate geological features and the surrounding terrain.
 		
 		\begin{minipage}{\textwidth}
 			\centering
-			\includegraphics[scale=1]{cellular-automata-cave}
+			\includegraphics[scale=.75]{cellular-automata-cave}
 			\captionof{figure}{An example of three-dimensional cellular automata cave generation \cite{bergauer_prozedurale_nodate}}
 			\label{fig:ca-cave}
 		\end{minipage}
@@ -155,7 +155,7 @@
 		
 		Polygonal meshes are a way of representing three-dimensional objects. These are created through polygons (typically triangles) joined by at least two vertices. These polygons are then represented by the coordinates of the vertices that compose them, while the space between the vertices acts as the viewable portion.
 		
-		In contrast to polygons representing faces of a geometry, voxels represent a value in space. This value represents a volume in space, and are placed in a regularly spaced grid of similar values. These valuesi n space can contain multiple data points, such as opacity, color, geometry (for example, cubes), among other things. Voxels are represented by their position relative to other voxels, allowing for easier representation of layers of geometry. An example of this voxel rendering can be found in the voxel space rendering engine, used for early flight simulator games. This used pre-generated height and color maps to determine which pixels would be visible on the screen, and at what height. The result is a fairly efficient method of rendering the player's perspective, at the cost of being unable to have more complex landscapes. In modern voxel based approaches, more complicated methods are used to render complex landscapes accurately.
+		Voxels represent a volume element in space. These are placed in a regularly spaced grid of similar values. These values in space can contain multiple data points, such as opacity, color, geometry (for example, cubes), among other things. Voxels are represented by their position relative to other voxels, allowing for easier representation of layers of geometry. 
 		
 	\vspace{10pt}
 	\let\clearpage\relax
@@ -184,7 +184,7 @@
 			\label{fig:wiener-proc}
 		\end{minipage} 
 		
-		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s, but developed in the decades to come. This development in capturing surface topography was fueled by Mandelbrot's claim that all forms of nature can only be adequately described using fractals. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. Generating fractal structures ran into issues with processing time, causing a need for an alternative \cite{inbook}. However, this early PGC found its use in \emph{Star Trek II: The Wrath of Khan} to help develop planets that do not exist. This technology was used later on in an accompaniment to a SIGGRAPH paper to demonstrate more of the ability of fractals. This set the stage for later movies and projects such as \emph{The Last Starfighter} and \emph{Return of the Jedi} \cite{ibm-fractal}. 
+		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s (See \autoref{chap:fractal}), but developed in the decades to come (). This development in capturing surface topography was fueled by Mandelbrot's claim that all forms of nature can only be adequately described using fractals. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. Generating fractal structures ran into issues with processing time, causing a need for an alternative \cite{inbook}. However, this early PGC found its use in \emph{Star Trek II: The Wrath of Khan} \cite{startrek} to procedurally create imaginary planets. This technology was used later on in an accompaniment to a SIGGRAPH paper to demonstrate more of the ability of fractals. This set the stage for further use in movies such as \emph{The Last Starfighter} and \emph{Return of the Jedi} \cite{ibm-fractal}. 
 		
 		\section{Cellular Automata}
 		
@@ -197,12 +197,12 @@
 		\section{Use}
 		One of the earliest usages of PGC in video games was in Rogue \cite{rogue}. This initial attempt at generating a dungeon in a random manner addressed some of the differences between procedural generation and purely random generation, by introducing some level of control to the designer. Rogue addressed this by using a three by three grid to generate the layout of the level, with hallways randomly connecting the rooms. These rooms would have a variable size to increase the variety of levels producible by the algorithm. This technique in particular, was created to address the memory constraints of computers at the time, as even with this more mathematical and less memory intensive approach, levels would need to be cleared from memory when moving on to the next one \cite{rogue}.
 		
-		
+		% can add more here if have time...
 
 	\vspace{10pt}
 	\let\clearpage\relax
 	\chapter{Cellular Automata}
-		Cellular automata work off of an array of uniform cells, each containing a state. For example, a one-dimensional cellular automata would be a row of cells. In \autoref{fig:cell-30}, an example of cellular automata is shown, with each row representing an iteration of the algorithm.
+		A cellular automata is composed of n-dimensional grid of uniform cells, each containing a state. For example, a one-dimensional cellular automata would be a row of cells. These cells are governed by a certain set of rules which are dependent on the neighborhood of cells, which can have a multitude of definitions. Typically, a neighborhood is just defined as the adjacent cells. The rules of a cellular automata determine the state of cells in the next generation, which indicates the next step of the algorithm. Each generational step updates the state of cells according to the defined rules. In \autoref{fig:cell-30}, an example of cellular automata is shown, with each row representing an iteration of the algorithm.
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -219,7 +219,7 @@
 			\item \textbf{Edges have different neighborhoods and rules.} \cite{nature-of-code}
 		\end{enumerate}
 		
-		While cellular automata can have a large variety of possibility, the majority of simplistic rulesets will not produce satisfying outcomes. The different range of outcomes of cellular automata have been divided into four classes by Wolfram.
+		While cellular automata can have a large variety of possibilities, the majority of simplistic rulesets will not produce satisfying outcomes. The different range of outcomes of cellular automata have been divided into four classes by Wolfram.
 		
 		\begin{enumerate}
 			\item \textbf{Uniformity.} After a number of generations, every cell becomes constant.
@@ -230,8 +230,8 @@
 	
 	\vspace{10pt}
 	\let\clearpage\relax
-	\chapter{Fractals}
-		Using fractal methods for PGC is another way of generating data. Conventionally, fractals are objects with a recursive, or repeating, definition. For example, the Koch snowflake showed one of the rules of fractals in a geometrical point of view. By repeating two rules, it was possible to generate complex shapes.
+	\chapter{Fractals} \label{chap:fractal}
+		Using fractal methods for PGC is another way of generating data. Fractals are objects with a recursive, or repeating, definition. These objects have a self similarity at different levels of magnification. For example, the Koch snowflake showed one of the rules of fractals in a geometrical point of view. By repeating two rules, it was possible to generate complex shapes.
 		
 		\begin{enumerate}
 			\item Draw an Equilateral triangle
@@ -371,13 +371,13 @@
 			\label{fig:top-map}
 		\end{minipage} 
 	
-		In terms of generating geological formations for landmarking a terrain, height maps add additional limitations on the possibilities. Height maps are unable to store multiple data values at each point, without significant complexity in interpreting the resultant data. This makes the generation of overhangs, arches, or any feature with protruding structures, difficult without additional data storage for these exceptions. A possible solution for this issue includes the storage of overhangs or similar features separately. Voxel based methods, or mesh based systems to store the terrain data instead have also been used.  
+		Height maps can be combined with a color map of the same dimensions, in order to map colors to each of the height locations. This effect can be seen in the voxel space rendering technique, shown in \ref{sec:imagebasedmethods} In terms of generating geological formations for landmarking a terrain, height maps add additional limitations on the possibilities. Height maps are unable to store multiple data values at each point, without significant complexity in interpreting the resultant data. This makes the generation of overhangs, arches, or any feature with protruding structures, difficult without additional data storage for these exceptions. A possible solution for this issue includes the storage of overhangs or similar features separately. Voxel based methods, or mesh based systems to store the terrain data instead have also been used.  
 		
 	\vspace{10pt}
 	\let\clearpage\relax
 	\chapter{Rendering and Display}
 	
-		\section{Image Based Methods}
+		\section{Image Based Methods} \label{sec:imagebasedmethods}
 		
 		Image based methods work by rendering based on the screen resolution of the output and the resolution of the input, rather than storing geometric positions. One example of image based rendering is the voxel space rendering system. The voxel space rendering system uses voxel raster graphics to display three-dimensional geometry with low memory and processing requirements. This was developed in the early 90's, involving a height and color map to position the pixels on the screen. While this technique was not historically used with noise generating algorithms, the rendering system fits the requirements for the use of techniques such as two-dimensional Perlin noise. By using Perlin noise, the height and color maps can be generated at run-time instead of being created beforehand. An example of this is shown in \autoref{fig:pnvs}. At the time, displaying complex height-maps in three-dimensions was difficult computationally, and the voxel space technique allowed this to happen.
 		
@@ -393,50 +393,87 @@
 		\begin{minipage}{\textwidth}
 			\centering
 			\includegraphics[scale=.2]{line-by-line}
-			\captionof{figure}{Basic rasterization technique of the Voxel Space engine. \cite{voxel-space}}
+			\captionof{figure}{Basic rasterization technique of the Voxel Space engine \cite{voxel-space}.}
 			\label{fig:vs-raster}
 		\end{minipage}
 	
-		This can be optimized with drawing from front-to-back with the addition of a y-buffer to determine the highest y position to draw. However, the voxel-space rendering system has a downside of having fewer pixels to determine the colors and heights of closer landmasses. This creates a pixellated effect for the foreground, while the background is rendered in higher detail. This method can be seen in more detail in \autoref{fig:vs-patent}. 
+		This can be optimized with drawing from front-to-back with the addition of a y-buffer to determine the highest y position to draw. In this case, the y-buffer holds the highest y position, guaranteeing that the closest regions of the height map are displayed properly. However, the voxel-space rendering system has a downside of having fewer pixels to determine the colors and heights of closer landmasses. This creates a pixellated effect for the foreground, while the background is rendered in higher detail. This method can be seen in more detail in \autoref{fig:vs-patent}. 
 		 
 		\begin{minipage}{\textwidth}
 		 	\centering
 		 	\includegraphics[scale=0.5]{US6020893A}
-		 	\captionof{figure}{US Patent 6 020 893 \cite{US6020893}}
+		 	\captionof{figure}{US Patent 6 020 893 \cite{US6020893}.}
 		 	\label{fig:vs-patent}
 		\end{minipage}
 		
 		This weakness can be mitigated in some effect by having multiple heightmaps of differing detail to draw from. This would mitigate some of the advantage of voxel space rendering in increasing the rendering time and processing required for the algorithm. In addition to the weakness in rendering closer objects, height maps are also unable to render more complex geological formations, such as caves, archways or overhangs. Later iterations of the voxel space rendering engine worked around some of these limitations by introducing rendering of both polygons and voxels. Another possible workaround to the low resolution of the voxel space rendering system would be using procedurally generated noise as the platform for creating height maps. By creating the height map dynamically from noise, the memory used for storing the program overall would be smaller, and the resolution would not be constrained, as for areas closer to the camera, the interpolation between the points of the noise map would just be decreased. 	
 	
-		\section{Polygons}
+		\section{Polygononal Meshes}
 	
-		Polygons can be used as an alternative to image-based methods of rendering, or techniques like the voxel space engine. A polygon mesh is composed of three parts.
+		Using a polygonal mesh to represent an object is one of the most common methods of representing objects on a computer. A polygon is a planar shape, defined by connecting a series of vertices. A polygon mesh is composed of polygons, and is defined by three parts.
 		
 		\begin{center}
 			\begin{tabular}{ l l } 
 				V & a set of vertices (points in space)\\ 
 				$E {\subset} (V x V)$ & a set of edges (line segments)\\ 
-				$F {\subset} E*$  & a set of faces \\
+				$F {\subset} E^{\ast}$  & a set of faces \\
 			\end{tabular}
 		\end{center}
 		% https://www.classes.cs.uchicago.edu/archive/2015/fall/23700-1/docs/mesh-notes.pdf
 	
-		Now, with the increased processing power of computers and the optimizations made towards rendering these polygons, a polygon mesh will have thousands of individual vertices/triangles. Using these triangles, the computer is able to approximate a three-dimensional surface. For visibility, these polgyons can then be displayed with a front face and a back face, to calculate lighting and reduce some processing time. However, polygons have a similar rendering issue as height maps and image based methods. Since the polygons must be stored with a physical location, this means that every surface is typically just a sheet of paper. In rendering terrain, while polygons can render three dimensional terrain with overhangs and caves, these systems are almost always static. 
+		These parts allow for the definition of a shape, composed of polygons. Triangles are the default polygon for use in polygonal meshes, the vertices composing the face of a triangle all have to occupy the same plane \cite{polygon}. By connecting the faces of multiple triangles, it is possible to assemble more complex shapes. For example, two right angle triangles connected along the hypotenuse edge will create a square, then six of these squares can be connected to form a cube. While this takes twelve triangles to represent, there are only eight unique vertices that need their position defined. An example of a polygonal mesh is shown in \autoref{fig:utah-teapot}.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.3]{utah-teapot}
+			\captionof{figure}{A polygonal mesh of the Utah Teapot \cite{utah-teapot}.}
+			\label{fig:utah-teapot}
+		\end{minipage}	
 		
 		\section{Voxels}
 	
-								In contrast to polygons, voxels represent individual points in space. These indivudual points in space contain a few attributes, the position in space and typically the material and/or texture data among other things. This allows for easier computation of the absense of terrain data, such as in caves or polygons. In terms of creating a cave, the points in space representing the cave just need to be removed, in contrast to the mapping required to store the vertices in space. 
-								
-								While the success of Minecraft has made it the atypical example of procedural generation rendered using voxels, the representation of voxels as cubes stacked in space is not accurate to the greater definition of the voxels being points in space. Minecraft does use a voxel system to store the points in space as data, indexed by an YZX system for compression \cite{minecraft-voxel}. However, Minecraft's rendering system is based around a polygon system to display the individual blocks. 
+		In contrast to polygons, voxels represent a volume element in space. Voxels act as a three-dimensional version of a pixel in space. While voxels are typically contained within a cubic cell in three-dimensions, they are not limited to this shape, and can have any number of shapes. These indivudual elements contain its position in space and another parameter or set of parameters, ranging from the color to the material to the texture data, among other possibilities. This allows for easier computation of the absence of terrain data, such as in caves or polygons. In terms of creating a cave, the points in space representing the cave just need to be removed, in contrast to the mapping required to store the vertices in space. 
 		
-		\section{Rendering Differences}
+		While the success of Minecraft has made it the atypical example of procedural generation rendered using voxels, the representation of voxels as cubes stacked in space is not accurate to the greater definition of the voxels being volume elements in space. Minecraft does use a voxel system to store the points in space as data, indexed by an YZX system for compression \cite{minecraft-voxel}. However, Minecraft's rendering system is based around a polygon system to display the individual blocks. 
 		
-								Polygons have a few notable disadvantages in the rendering of terrain. For example, given a two-dimensional array map or a noise height map, polygons can be used to connect each one of the points given in these maps to render all of the land faces. However, this causes some level of uniformity in the rendering system, as between each elevation grid, it is not possible to connect polygons in a way to create a truly vertical or horizonal slope. 
-								
-								While voxels have advantages versus the use of polygons, they also have a number of disadvantages. Voxels require more memory to utilize properly. One example given is of a noise height map for a land that is 100m x 100m in size, with an elevation range from 0 to 100m. This information is stored using 32bit floats, requiring 320,000 bits of data, giving 100,000 points to connect using polygons. However, in contrast for the same noise height map, for each square meter of landscape on the screen of a 100x100 pixel monitor, the cubic meter would consist of 1,000,000 points for a memory requirement of 32,000,000,000,000 bits of data, over 100 million times the memory requirements of the polygon noise map. To alleviate this problem, voxel maps use a much larger polygonal cube size to reduce the memory requirements of using voxels \cite{high-level-voxel}. This leads into the use of voxels, and their blocky appearance in games such as Minecraft and Cubeworld.
-								
-								In addition, voxel-based rendering is not restricted to the use of noise or array maps to draw data from. Terrain can be definited by using a scalar function over a three-dimensional grid, also known as a voxel map. In a voxel map, the function value represents a form of distance from the terrain surface rather than elevation. For points in space outside of the terrain surface in empty space, the value would be positive, negative values would indicate that the point inside solid space, and a value of zero would correspond to the terrain's surface. This allows for greater topographical and topological complexity in representing the terrain. This improvement introduces its own difficulties, such as increasing the number of vertices and triangles needed to construct the terrain, increasing the development of a seamless algorithm for rendering the voxel based terrain, as well as increasing the texturing and shading from the possible complexity of the terrain. 
+		An example of a structure of representing voxel data is through the marching cubes algorithm. Each voxel (cube) in marching cubes is defined by the pixel values at the corners of the cube. These eight pixel values each contribute a single value, also known as a density value, with negative values indicating that the point is in empty space, and positive values indicating that the point is inside of solid terrain. A density value of 0, at the boundary of positive and negative, indicates the surface of the terrain. Along this surface is where the polygonal mesh is constructed \cite{marching-cubes}. At any voxel area contained within the eight points, the marching cubes algorithm allows generation of the correct polygons, outputting from zero to five polygons.
+		
+		To generate the polygons within the cell, the density values must be determined. The set of all corner vertices can be denoted as \(V = {v0,v1,v2,v3,v4,v5,v6,v7}\), where a positive density sets the vertex's bit to one, and a negative density sets the value to zero. 
+
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.75]{01fig03}
+			\captionof{figure}{A single voxel with example density values at the eight corner vertices \cite{marching-cubes}.}
+			\label{fig:marching-cube}
+		\end{minipage}
 	
+		\begin{center}
+			\begin{tabular}{ l l } 
+				\begin{tabular}{ l l }
+					Case & = \\
+				     	 & = \\
+				     	 & = \\
+				\end{tabular} 
+				&
+				\begin{tabular}{ r r r r r r r r }
+					{ } v7$\vert$&v6$\vert$&v5$\vert$&v4$\vert$&v3$\vert$&v2$\vert$&v1$\vert$&v0\\
+					{ } 1 $\vert$&1$\vert$&0$\vert$&0$\vert$&0$\vert$&0$\vert$&0$\vert$&1\\
+					193&&&&&&&
+				\end{tabular}
+			\end{tabular}
+		\end{center}
+	
+		These bit values can be concatenated with a bitwise OR operation to produce a single byte, in the range of 0-255. Two of these cases end up being trivial - the concatenated value is 0 or 255, all the points are either inside of a solid terrain, or are in empty space. For the remaining configurations, there are only 14 unique combinations (shown in \autoref{fig:01fig04}) of the remaining 254 possibilities. This allows for the use of a look-up table to generate the polygons \cite{marching-cubes-paul}. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.75]{01fig04}
+			\captionof{figure}{A single voxel with example density values at the eight corner vertices \cite{marching-cubes}.}
+			\label{fig:01fig04}
+		\end{minipage}
+	
+		The placements of the vertices of each of these figures is determined by the density values for each of the corner points, by interpolating the value between these values.
+		
 	\vspace{10pt}
 	\let\clearpage\relax
 	\chapter{Development}
