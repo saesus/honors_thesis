@@ -120,14 +120,14 @@
 		
 		\begin{minipage}{\textwidth}
 			\centering
-			\includegraphics[scale=0.8]{rule-30}
+			\includegraphics[scale=0.7]{rule-30}
 			\captionof{figure}{1-Dimensional cellular automata example. Each row is an iteration, following the eight rules at the bottom \cite{cell-30}.}
 			\label{fig:cell-30}
 		\end{minipage}
 		
 		\begin{minipage}{\textwidth}
 			\centering
-			\includegraphics[scale=.75]{cellular-automata-cave}
+			\includegraphics[scale=.6]{cellular-automata-cave}
 			\captionof{figure}{An example of three-dimensional cellular automata cave generation \cite{bergauer_prozedurale_nodate}}
 			\label{fig:ca-cave}
 		\end{minipage}
@@ -224,7 +224,7 @@
 		
 		Since arbitrary input \(x\) coordinate can have difference distances from the two closest integer coordinates, the influence of the gradient value of each of these integer coordinates must be found. These two influence values can be determined by the distance vector from each coordinate, multiplied by the gradient value at each point. 
 		
-		The two closest integer coordinates must be found first. To do this, round the input \(x\), and subtract one if the value was rounded down, else add one. This can also be accomplished through the use of a floor or ceiling function, or casting the float input, \(x\) as an integer. This will get the values in red, shown in \autoref{fig:lower_upper}
+		The two closest integer coordinates must be found first. To do this, round the input \(x\), and subtract one if the value was rounded down, else add one. This can also be accomplished through the use of a floor or ceiling function, or casting the float input, \(x\) as an integer. This will get the values in red for a given input, shown in blue, as pictured in \autoref{fig:lower_upper}.
 		
 		\begin{lstlisting}[label={lst:minmax}, language=Python, frame=none, caption={An example of finding the min and max bounds in 1D Perlin noise, given input x.}, captionpos=b]
 			x_min = int(x)
@@ -407,6 +407,15 @@
 				# 6t^5 - 15t^4 - 10t^3
 				return t * t * t * (t * (t * 6 - 15) + 10)
 		\end{lstlisting}
+	
+		This will result in an image such as \autoref{fig:lect14-perlin}, where the output values are interpreted as grayscale color values. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=1.0]{lect14-perlin}
+			\captionof{figure}{Two-dimensional Perlin noise \cite{noise-ex}.}
+			\label{fig:lect14-perlin}
+		\end{minipage} 
 		
 		\section{3-Dimensional}
 		
@@ -440,7 +449,7 @@
 		
 		\begin{minipage}{\textwidth}
 			\centering
-			\includegraphics[scale=.25]{perlin vs simplex}
+			\includegraphics[scale=.2]{perlin vs simplex}
 			\captionof{figure}{A comparison of Perlin and Simplex noise \cite{simplex-demyst}}
 			\label{fig:fig4}
 		\end{minipage}
@@ -461,7 +470,7 @@
 			
 			\begin{minipage}{\textwidth}
 				\centering
-				\includegraphics[scale=.5]{D10}
+				\includegraphics[scale=.4]{D10}
 				\captionof{figure}{An example of a height map. \cite{voxel-space}}
 				\label{fig:height-map}
 			\end{minipage}
@@ -470,7 +479,7 @@
 			
 			\begin{minipage}{\textwidth}
 				\centering
-				\includegraphics[scale=.5]{top-map}
+				\includegraphics[scale=.4]{top-map}
 				\captionof{figure}{A topological map is shown, with a corresponding three-dimensional representation of the map data below. \cite{top-map}}
 				\label{fig:top-map}
 			\end{minipage} 
@@ -549,6 +558,7 @@
 		
 		While the success of Minecraft has made it the atypical example of procedural generation rendered using voxels, the representation of voxels as cubes stacked in space is not accurate to the greater definition of the voxels being volume elements in space. Minecraft does use a voxel system to store the points in space as data, indexed by an YZX system for compression \cite{minecraft-voxel}. However, Minecraft's rendering system is based around a polygon system to display the individual blocks. 
 		
+		\label{pt:marching_cubes}
 		An example of a structure of representing voxel data is through the marching cubes algorithm. Each voxel (cube) in marching cubes is defined by the pixel values at the corners of the cube. These eight pixel values each contribute a single value, also known as a density value, with negative values indicating that the point is in empty space, and positive values indicating that the point is inside of solid terrain. A density value of 0, at the boundary of positive and negative, indicates the surface of the terrain. Along this surface is where the polygonal mesh is constructed \cite{marching-cubes}. At any voxel area contained within the eight points, the marching cubes algorithm allows generation of the correct polygons, outputting from zero to five polygons.
 		
 		To generate the polygons within the cell, the density values must be determined. The set of all corner vertices can be denoted as \(V = {v0,v1,v2,v3,v4,v5,v6,v7}\), where a positive density sets the vertex's bit to one, and a negative density sets the value to zero. 
@@ -593,7 +603,37 @@
 		
 		Procedural algorithms only generate a set of values. In order to transform these values into PGC, it must be interpreted into the desired outcome. Ultimately, this is a very subjective task, but this paper will cover three possible examples of interpretation. 
 		
-		One method of interpreting data is to interpret the values given from procedural generation into a tileset. This method can be seen in the example of Dwarf Fortress, given above. 
+		A tileset is a two-dimensional grid interpretation of the display. This grid is uniform. One method of interpreting data is to interpret the values given from procedural generation into a tileset. This method can be seen in the example of Dwarf Fortress, given above. For example, in Dwarf Fortress, there are 256 possible outputs. Each of these possible outputs has an associated ASCII character, or an associated square image to serve as the interpreted output. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.3]{Curses_1920x900}
+			\captionof{figure}{A tileset grid pictured on the left half, with one singular 24x36 pixel tile on the right\cite{df-tileset}.}
+			\label{fig:Curses_1920x900}
+		\end{minipage}
+	
+		This method works efficiently for rendering, and allows complete control over the PGC, as every single possible output is individually controlled by the user. A single tile does not need to correspond to a single procedural value. For example, any procedurally generated value in the range of \([0,3]\) could be interpreted as one tile. 
+		
+		Another method of interpretation is associated with storage as well. This method involves a heightmap, where the procedurally generated value is taken as a height value. These heightmaps can be rendered in a variety of ways, including using image-based methods, polygons, or voxels. In \autoref{fig:terrain_mesh}, a heightmap was generated, then another algorithm was used to connect the different vertices together to create a polygonal mesh. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.3]{terrain_mesh}
+			\captionof{figure}{A heightmap mesh\cite{terrain_mesh}.}
+			\label{fig:terrain_mesh}
+		\end{minipage}
+	
+		The last interpretation of data that will be covered here is the interpretation of the procedural values as density values. This particular interpretation is what is used in the Marching Cubes algorithm (see \autoref{pt:marching_cubes}). 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=1.0]{marching}
+			\captionof{figure}{Terrain created using the Marching Cubes algorithm\cite{marching-cubes}.}
+			\label{fig:marching}
+		\end{minipage}
+	
+		A texture is an image or color applied to the surface of a three-dimensional model. For the data created from heightmaps or Marching Cubes, there are also a number of ways to texture this topographical data. One example is similar to the tileset interpretation of procedural data -- just interpret a value, or range of values, as a single color. This often works well for heightmaps, as lower regions can be colored darker, or shaded with water, while higher regions can replicate snowy mountaintops. Another option is triplanar mapping, which blends three textures to create the least stretched image \cite{triplanar, marching-cubes}.  
+		
 	\vspace{10pt}
 	\let\clearpage\relax
 	\chapter{Development}
@@ -621,7 +661,7 @@
 			\label{fig:wiener-proc}
 		\end{minipage} 
 		
-		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s (See \autoref{sec:fractal}), but developed in the decades to come. This development in capturing surface topography was fueled by Mandelbrot's claim that all forms of nature can only be adequately described using fractals. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. Generating fractal structures ran into issues with processing time, causing a need for an alternative \cite{inbook}. However, this early PGC found its use in \emph{Star Trek II: The Wrath of Khan} \cite{startrek} to procedurally create imaginary planets. This technology was used later on in an accompaniment to a SIGGRAPH paper to demonstrate more of the ability of fractals. This set the stage for further use in movies such as \emph{The Last Starfighter} and \emph{Return of the Jedi} \cite{ibm-fractal}. 
+		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s (see \autoref{sec:fractal}), but developed in the decades to come. This development in capturing surface topography was fueled by Mandelbrot's claim that all forms of nature can only be adequately described using fractals. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. Generating fractal structures ran into issues with processing time, causing a need for an alternative \cite{inbook}. However, this early PGC found its use in \emph{Star Trek II: The Wrath of Khan} \cite{startrek} to procedurally create imaginary planets. This technology was used later on in an accompaniment to a SIGGRAPH paper to demonstrate more of the ability of fractals. This set the stage for further use in movies such as \emph{The Last Starfighter} and \emph{Return of the Jedi} \cite{ibm-fractal}. 
 		
 		\section{Cellular Automata}
 		
@@ -638,7 +678,7 @@
 
 		\section{Areas of Research}
 	
-		An ongoing area of research for PGC is the introduction of neural networks as the framework. One example of this is the procedural generation of terrain via Tensorflow. This implementation was trained on a large data-set of terrain height maps, around 10,000, with the addition of satellite data to use for coloring. The specific neural network involved in the implementation was a Generative Adversarial network (\cite[see]{goodfellow2014generative}), which works on creating fake images, and attempting to discern between real and fake. By iterating this, the network will get better at both tasks, with the generator learning how to create more and more realistic images. For the problem of coloring the terrain, a style network was used to take two images and blend them to create an output image that looks like the content image, but with the style of the reference image. This technique is used in other applications, such as the neural networks trained on recreating photographs in a particular artist's style, shown in \autoref{fig:neural-style}. 
+		An ongoing area of research for PGC is the introduction of neural networks as the framework. One example of this is the procedural generation of terrain via Tensorflow. This implementation was trained on a large data-set of terrain height maps, around 10,000, with the addition of satellite data to use for coloring. The specific neural network involved in the implementation was a Generative Adversarial network\cite{goodfellow2014generative}, which works on creating fake images, and attempting to discern between real and fake. By iterating this, the network will get better at both tasks, with the generator learning how to create more and more realistic images. For the problem of coloring the terrain, a style network was used to take two images and blend them to create an output image that looks like the content image, but with the style of the reference image. This technique is used in other applications, such as the neural networks trained on recreating photographs in a particular artist's style, shown in \autoref{fig:neural-style}. 
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -665,11 +705,7 @@
 			\label{fig:dl-noise}
 		\end{minipage}
 	
-		The field of procedural content generation using machine learning is constantly evolving, as there are many different methodologies that have been applied to this task. The multitude of neural architectures allows for the tailoring of neural networks to different types of generated content, at the cost of necessitating large amounts of searching for the right architectures.
-		
-		\cite{Liu_2020}
-		
-		\section{Algorithm Advancements} 
+		The field of procedural content generation using machine learning is constantly evolving, as there are many different methodologies that have been applied to this task. The multitude of neural architectures allows for the tailoring of neural networks to different types of generated content, at the cost of necessitating large amounts of searching for the right architectures \cite{Liu_2020}.
 		
 		In addition to the advancements in noise generation, rendering techniques associated with procedural generation have had advancements as well. For example voxel-based terrain has had advances in both the front and back-end of the algorithms. Voxel-based rendering methods often use a marching cubes algorithm to both smooth voxel surfaces and increase run-times. A modified version of this algorithm was created to facilitate faster implementation and design of a level-of-detail algorithm. Some of the difficulties of this revised implementation of the Marching Cubes algorithm involved finding a suitable compression technique for the voxel map, as for larger terrains, voxel mapping will quickly grow beyond the limits of addressable memory. In addition, limiting the density of vertices, triangles and individual meshes through a level-of-detail system ensures the higher rendering performance of this revised algorithm. 
 		
