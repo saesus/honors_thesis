@@ -15,7 +15,8 @@
 \usepackage{tgpagella}
 
 % Inline code
-\usepackage{listings, lstautogobble}
+\usepackage{listings, lstautogobble, newtxtt}
+\lstset{basicstyle=\ttfamily, keywordstyle=\bfseries}
 
 \usepackage[labelfont=bf, labelsep=period]{caption}
 \usepackage{graphicx}
@@ -51,7 +52,7 @@
 			
 			\vfill
 			
-			\textbf{DRAFT 3.1.3}
+			\textbf{DRAFT 4.1.1}
 			
 			\uline{Dianne Hansford, Ph.D \hfill Director}
 			\vspace{1cm}
@@ -75,7 +76,7 @@
 	\chapter*{Abstract}
 	
 	\addcontentsline{toc}{chapter}{Abstract}
-	Procedural content generation is a method of creating data algorithmically using controlled randomness. These algorithms can be used to generate complex environments as opposed to manually creating environments, using photogrammetric techniques, or other methods. Procedural generation can use a variety of techniques including fractals, noise, cellular automata, and deep learning. This paper will survey various procedural algorithms, how they work, and briefly cover some examples and the history.
+	Procedural content generation is a method of creating data algorithmically using controlled randomness. These algorithms can be used to generate complex environments as opposed to manually creating environments, using photogrammetric techniques, or other methods. Procedurally generated content can be created using noise based algorithms. This paper will detail procedural generation of content using noise.
 	
 	\clearpage
 	
@@ -88,54 +89,41 @@
 		
 		Procedural generation is an often hidden, yet common feature among digital content, as it automates the creation of large amounts of data. Often, this is hidden in the backgrounds of movies and video games, as well as other art -- adding subtle texture and variation. Procedural generation has many possible outputs, with some examples being the generation of stories, histories, particle effects, and characters. One of the most famous cases of procedural generation for entire worlds is Minecraft \cite{minecraft-gen}. Other examples of procedural generation's varied uses include games such as The Elder Scrolls II: Daggerfall, which employs various forms of procedural generation to determine the location of non-player characters, the layout of dungeons, as well as the terrain itself \cite{daggerfall}. In more complex cases, procedural generation is used to create fake histories, with the more well-known example of Dwarf Fortress \cite{df-dev}. However, procedural generation's applications are not only limited to games. In The Lord of the Rings, many of the scenes with large amounts of characters were created using procedural generation, ensuring individual animations of the slightly differentiated characters \cite{massive}.
 		
-		This paper surveys various procedural algorithms and examples of the procedural generation of content and their applications in generating geological formations and the surrounding terrain. Procedurally generated content (PGC) refers to the use of computers to algorithmically create data using a pseudo-random procedural algorithm, which is then interpreted into content. Some procedural algorithms to create content includes noise, fractals, as well as cellular automata. These algorithms can be mixed and matched in any number of ways to fine-tune different outcomes, or to add variety to content. To qualify as PGC, the algorithm to create data must be modifiable and controllable, while the results from the algorithm must be reproducible. The reproducible criteria for PGC can be fulfilled by the use of deterministic random number generators (See \autoref{sec:rng}), but some forms of procedural algorithms are majority governed by randomness. The modifiable criteria is fulfilled by the use of parameters to modify the algorithm. A deterministic system is a system in which no randomness is involved, while a stochastic system is one that can be described by a random probability distribution. While these concepts may seem to be mutually exclusive, they occupy different portions of the overall procedural generation pipeline, allowing them to co-exist. A geological formation, is a body of rock that possesses some degree of internal consistency or distinctive features \cite{2005}. This allows geological formations to be separate from the region it is placed in while still being a landmark for the region as a whole. Just as sand is individually different at a small scale, so too is the data created by procedural generation. However, when viewed as a whole, there is little difference between each grain. This necessitates user control and adjustments in order to make a region stand out versus another, with the use of landmarks or geological formations.
+		This paper explains procedural algorithms involving noise, and noise's application in generating geological formations and the surrounding terrain. Procedurally generated content (PGC) refers to the use of computers to algorithmically create data using a pseudo-random procedural algorithm, which is then interpreted into content. Some examples of procedural algorithms to create content include noise, fractals, as well as cellular automata. These algorithms can be mixed and matched in any number of ways to fine-tune different outcomes, or to add variety to content. To qualify as PGC, the algorithm to create data must be modifiable and controllable, while the results from the algorithm must be reproducible. The reproducible criteria for PGC can be fulfilled by the use of deterministic random number generators (See \autoref{subsec:rng}), but some forms of procedural algorithms are majority governed by randomness. The modifiable criteria is fulfilled by the use of parameters to modify the algorithm. A deterministic system is a system in which no randomness is involved, while a stochastic system is one that can be described by a random probability distribution. While these concepts may seem to be mutually exclusive, they occupy different portions of the overall procedural generation pipeline, allowing them to co-exist. A geological formation, is a body of rock that possesses some degree of internal consistency or distinctive features \cite{2005}. This allows geological formations to be separate from the region it is placed in while still being a landmark for the region as a whole. Just as sand is individually different at a small scale, so too is the data created by procedural generation. However, when viewed as a whole, there is little difference between each grain. This necessitates user control and adjustments in order to make a region stand out versus another, with the use of landmarks or geological formations.
 		
-		\section{Motivation for Procedurally Generated Content}
+		While noise is the focus of this paper, it is important to note that there are alternatives to noise for creating PGC. One example of this is fractal-based algorithms, which are characterized by their self-similarity. This means that the parts of the whole fractal contain the same characteristics.
 		
-		\section{Fundamentals} \label{sec:rng}
+		\begin{enumerate}
+			\item Draw an Equilateral triangle
+			\item Replace all lines as follows, and repeat 2
+		\end{enumerate}
 		
-		PGC is often dependent on the use of random numbers. Random numbers may be generated through non-deterministically through the use of unpredictable physical processes, and deterministically using an algorithm \cite{rng}. These methods are also known as random bit generators, Non-deterministic Random Bit Generator (NRBG) and Deterministic Random Bit Generator (DRBG), respectively. One example of an unpredictable physical process to generate non-deterministic random numbers is through using radio receivers to pick up atmospheric noise \cite{random-org}. A NRBG measures a random physical process and compensates for potential biases to generate a random number. For deterministically generated random numbers the random numbers are algorithmically determined using an input value (also known as a seed). A DRBG is an algorithm to generate a sequence of numbers whose distribution approximates a sequence of random numbers. The algorithm to create these numbers is static -- by inputting a seed, the same sequence of random numbers will always be created. This concept of repeatablity is shared between PGC and DRBG's. DRBG's are also known as pseudorandom number generators, and their generated numbers are described as pseudorandom because they only approximate randomness -- the deterministic portion of the algorithm makes true randomness in this context impossible. PGC algorithms follow the same methodology as DRBGs. PGC also often uses a seed for the procedural algorithm. In procedural generation, the seed ensures the criteria for procedural generation to be reproducible, acting as a soft limit to the amount of randomness that can be created, since seeds are often relatively short in size. This seed number as the starting point, will only have meaning in the context of the same algorithm it is being used in -- changing the algorithms and/or manipulating the seed will change the entire output. This ensures regularity and controlled randomness to the PGC in a static environment, since any input number will result in the same set of outputs using the same procedural generation methodology. By taking an input seed, it will be modified using an procedural algorithm to obtain the output, possibly using additional random numbers created after the original seed. By using a DRBG, the creation of these numbers will be static, as the "seed" for a DRBG will determine the sequence of random numbers that it returns.
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.5]{m_reprule}
+			\captionof{figure}{Rule of the Koch snowflake \cite{fractal-landscapes}.}
+			\label{fig:m_reprule}
+		\end{minipage}
+		
+		After several iterations of this rule, \autoref{fig:m_koch} is the result.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.5]{m_koch}
+			\captionof{figure}{Koch snowflake \cite{fractal-landscapes}.}
+			\label{fig:m_koch}
+		\end{minipage}
 	
-		\section{Methods Overview}
-		This section will briefly cover some procedural algorithms as well as an introduction to their methods and usage. These will be further elaborated on later, with additional details in their application and quirks in PGC. 
+		Fractals and the subsequent geometric shapes that can be created from fractals were found to be useful in describing nature. By studying geographical data, many similarities such as self-similarity and the subdivision of space were found, pushing the study of fractal geometry forward \cite{doi:10.1111/j.1467-8306.1987.tb00158.x}. 
 		
-		Noise is a method of creating PGC, using the seeding method to manipulate and control the outcome. Lattice gradient noise is a commonly used and widespread form of noise. This form of noise creation works off of the premise of an integer lattice -- a regularly spaced array of points in a square array \cite{integer-lattice}. One of the most well-known applications of this is Perlin noise, notably developed for use in Tron \cite{tron} to create textures to allow for more realistic, interesting and believable effects and images \cite{ken-perlin}. Pseudo-random numbers (referring to numbers created by a DRGB) are generated and evenly distributed across this lattice, then a low-pass filter is applied to smooth the edges between each of these points. A low-pass filter in this application helps to smooth the created lattice by averaging nearby values, shown in \autoref{fig:lpf}. 
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=0.5]{lowpass}
-			\captionof{figure}{Low-pass Filter Effect}
-			\label{fig:lpf}
-		\end{minipage}
-		
-		This creates a blurring effect, with fewer large value changes. This gradation between each of the lattice points reduces the randomness present in the lattice. The result is an image such as the one shown in \autoref{fig:noise-ex}.
+		Another method of generating terrain and other features such as caves \cite{10.1145/1814256.1814266} revolves around the use of cellular automata. Cellular automata are a model of a system of cell objects with three characteristics. The cells must be placed on a regularly spaced grid, regardless of dimensionality. These cells must each have a state, which can describe any number of features for each individual cell. Lastly, each cell must have a neighborhood. While typically a neighborhood is composed of only the adjacent cells, it can be defined in any number of ways. This approach relies on having the information of neighbors and the states of their neighbors to determine surrounding cells to then modify their states \cite{nature-of-code}. 
 		
 		\begin{minipage}{\textwidth}
 			\centering
-			\includegraphics[scale=1]{lect14-perlin}
-			\captionof{figure}{Perlin noise example. \cite{noise-ex}}
-			\label{fig:noise-ex}
+			\includegraphics[scale=0.8]{rule-30}
+			\captionof{figure}{1-Dimensional cellular automata example. Each row is an iteration, following the eight rules at the bottom \cite{cell-30}.}
+			\label{fig:cell-30}
 		\end{minipage}
-
-		Fractal-based algorithms are another approach at creating PGC. Fractals are mainly characterized by their self-similarity. This means that the parts of the whole fractal contain the same characteristics. Fractals and the subsequent geometric shapes that can be created from fractals can be used to describe nature. Fractal geometry applied to landscapes began with studies of map data and research on the similarities between fractals and the data. Fractals prove as a relevant approach to representing geographical data due to the self-similarity and the subdivision of space, made easier by fractal surfaces \cite{doi:10.1111/j.1467-8306.1987.tb00158.x}. This provides a method of predicting the appearance and geometry of landscapes being studied. The technique works primarily from the subdivision of space combined with random numbers for each of the vertices created from the subdivision of space \cite{fractal-land}. In \autoref{fig:spatsub}, the four corner points act as the initially chosen vertices, and the vertices in the newly created plus shape are the vertices to randomly raise or lower. 
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=1]{landscapes}
-			\captionof{figure}{Spatial Subdivision.\cite{fractal-land} Original figure show on the left. In the middle, the figure is subdivided, then on the right the points resulting from the subdivision are perturbed vertically.}
-			\label{fig:spatsub}
-		\end{minipage}
-		
-		Similarly to Perlin noise, this technique often utilizes a seed random number to start from, to make the results reproducible. However, while fractals are very computationally efficient, the parameter that makes this seed is very sensitive to change. Very small changes will completely change the features of a map designed this way.
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.4]{fractal-noise}
-			\captionof{figure}{Fractal procedural generation example \cite{fractal-land}}
-			\label{fig:fractal-land}
-		\end{minipage}
-		
-		Another method of generating terrain and other features such as caves \cite{10.1145/1814256.1814266} revolves around the use of cellular automata. A cellular automata is a model of a system of cell objects with three characteristics. The cells must be placed on a regularly spaced grid, regardless of dimensionality. In addition, these cells must each have a state, which can describe any number of features for each individual cell. Lastly, each cell must have a neighborhood. While typically a neighborhood is composed of only the adjacent cells, it can be defined in any number of ways. This approach relies on having the information of neighbors and the states of their neighbors to determine surrounding cells to then modify their states \cite{nature-of-code}. This can be used in conjunction with a tiling system to procedurally generate geological features and the surrounding terrain.
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -144,9 +132,356 @@
 			\label{fig:ca-cave}
 		\end{minipage}
 		
-		\section{Representing Data}
+		\section{Motivation for Procedurally Generated Content}
+		
+		Topography is the study of the land surface, encompassing both natural and artificial features covering the surface. Procedural generation is often used in the creation of features such as geological formations and topography due to the self-similarity found in nature. While fractals serve as a good description of the fractal properties of edge-like features, such as the length of coastlines \cite{ijgi5060095}, noise can also serve as a method of generating these features, as well as filling out the areas in between. While creating these features is possible through other methods such as by hand or through photogrammetric methods \cite{bullinger2020photogrammetrybased}, using procedural algorithms allows for easier control over much larger surfaces, and can lead to similar quality results with the reduction of manual labor. This allows for smaller teams to more easily populate and create densely featured worlds. Some examples of this can be found in the procedural coverage and generation of vegetation of terrain, respectively, using custom built tools \cite{redengine}, or tools such as World Machine \cite{world-machine}. Another example is hidden in the backgrounds of movies, using procedural algorithms to populate topography in Pixar movies \cite{10.1145/3388767.3407372}.
+		
+		\section{Fundamentals} 
+			\subsection{Random Numbers} \label{subsec:rng}
+		
+			PGC is often dependent on the use of random numbers.The generation of random numbers is difficult as the algorithm or process used to obtain random numbers must not output random numbers with any recognizable patterns or regularities. This property is know as statistical randomness. Statistical randomness ensures that the probability distribution is uniform, with any number in the given range having an equal change of being selected. Random numbers may be generated non-deterministically through the interpretation of unpredictable physical processes, and deterministically using an algorithm \cite{rng}. These methods are also known as random bit generators, Non-deterministic Random Bit Generators (NRBG) and Deterministic Random Bit Generators (DRBG), respectively. One example of an unpredictable physical process to generate non-deterministic random numbers is through using radio receivers to pick up atmospheric noise \cite{random-org}. A NRBG measures a random physical process such as atmospheric noise and compensates for potential biases to generate a random number. While it is "theoretically impossible to prove that a random number generator is really random," the numbers produced by the generator can be analyzed to increase or decrease confidence in the generator. For deterministically generated random numbers the random numbers are algorithmically determined using an input value (also known as a seed). A DRBG is an algorithm to generate a sequence of numbers whose distribution approximates a sequence of random numbers. The algorithm to create these numbers is static -- by inputting a seed, the same sequence of random numbers will always be created. This property of seeding differentiates a DRBG and a NRBG. While a DRBG's outputs are not truly random, the output values in the long term should approximate a NRBG's results. 
+			
+			The concept of reproducibility is shared between PGC and DRBG's. DRBG's are also known as pseudorandom number generators; the generated numbers from DRBG's are described as pseudorandom because they only approximate randomness. This is due to the necessity of the seeding value, ensuring the deterministic portion of the definition. PGC algorithms follow the same methodology as DRBGs. PGC also often uses a seed for the procedural algorithm. While not all procedural generation uses a seeding function, seeding is a common property among PGC. In procedural algorithms, an input seed ensures the reproducibility. This seed number will only have meaning in the context of the same algorithm it is being used in -- changing the algorithms and/or manipulating the seed will change the entire output, so reproducibility is often limited to a per-version context. In a static environment, this ensures regularity as well as controlled randomness to the PGC. Procedural algorithms often use more than one random number, as in the case of Perlin noise. By using a seed number to determine the initial state of the DRBG, the sequence of random numbers is fixed for use by the procedural algorithm. 
+			
+			\begin{lstlisting}[label={lst:np.random}, language=Python, frame=none, caption={An example of seeding NumPy's random function in Python}, captionpos=b]
+				import numpy as np
+				
+				np.random.seed(10)
+				np.random.rand(10)
+			\end{lstlisting}
+			
+			For example, in \autoref{lst:np.random}, the same ten digits [0.77132064, 0.02075195, 0.63364823, 0.74880388, 0.49850701, 0.22479665, 0.19806286, 0.76053071, 0.16911084, 0.08833981] will always be returned, in order, because of the use of 10 as the seed for the DRBG. By using a DRBG, the creation of these numbers will be static, as the "seed" for a DRBG will determine the sequence of random numbers that it returns.
+		
+			\subsection{Hashing} \label{subsec:hashing}
+			
+			
+		
+	\vspace{10pt}
+	\let\clearpage\relax
+	\chapter{Noise}
+		
+		A procedural algorithm using noise returns a value in the range of \([0,1]\) for a given coordinate location. By setting a seed, the algorithm's results are reproducible. For this paper, the methodology of Perlin noise and its derivatives will be focused on, but other methods of generating noise include value noise and Worley noise. Perlin noise and Simplex noise are examples of gradient noises, which are based around lattices. A lattice is a regularly spaced array of points in a square/cube array \cite{integer-lattice}. In one dimension, this appears as a number line. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.4]{1d}
+			\captionof{figure}{One-dimensional Integer Lattice \cite{cartesian}}
+			\label{fig:1d}
+		\end{minipage}
 	
-		Representing the data generated procedurally is another task with a variety of solutions. Some of these methods include pixel-based methods, polygons, and voxels. One common, simplistic way to represent the data generated is to use ASCII characters, or other types of two-dimensional data such as colored pixels to convey the scene that is being represented. In the case of Dwarf Fortress, the use of ASCII symbols is used to represent the elements within the game, shown in \autoref{fig:asciidf}.
+		In two dimensions, this becomes a Cartesian coordinate plane in two dimensions.
+	
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.35]{2d}
+			\captionof{figure}{Two-dimensional Integer Lattice \cite{cartesian}}
+			\label{fig:2d}
+		\end{minipage}
+	
+		In three dimensions, this becomes a Cartesian coordinate system in three dimensions.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{3d}
+			\captionof{figure}{Three-dimensional Integer Lattice \cite{cartesian}}
+			\label{fig:3d}
+		\end{minipage}
+	
+		The dimensionality of Perlin noise and Simplex noise can extend to n-dimensions. These lattices form the basis of Perlin noise.
+		
+		Interpolation is another concept integral to Perlin noise. Interpolation is a method of estimating the value between two points. For example, using linear interpolation and given the two points (1,1) and (3,3), the assumption would be a linear slope between these two points. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{linear-interpolation}
+			\captionof{figure}{Plot of the two points (1,1) and (3,3), as well as a linear function between the two}
+			\label{fig:linear-interpolation}
+		\end{minipage}
+	
+		If asked to estimate the y-value of \(x = 2\), the result would be \(2\), due to the linear interpolation formula.
+		
+		\[y = \frac{y_0 (x_1 - x) + y_1 (x - x_0)}{(x_1 - x_0)}\]
+		
+		This linear interpolation function can also be implemented in code, known as the \lstinline|lerp| function, short for linear interpolation. 
+		
+		\begin{lstlisting}[label={lst:lerp}, language=Python, frame=none, caption={lerp function in Python.}, captionpos=b]
+			def lerp(low, high, t):
+				return low * (1-t) + high * t
+		\end{lstlisting}
+		
+		Linear interpolation is not the only form of interpolation. Two other forms of interpolation commonly used for Perlin noise include cosine interpolation as well as smoothstep interpolation. The implementation of the smoothstep function will be expanded on in \ref{sec:1d}.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{smoothstep}
+			\captionof{figure}{Example of smoothstep interpolation between two points}
+			\label{fig:smooth}
+		\end{minipage}
+		
+		\section{1-Dimensional} \label{sec:1d}
+		
+		For one-dimensional Perlin noise, the associated lattice will be a number line. At each of the integer \(x\) coordinates, a pseudo-random value is generated. This value represents a gradient, or a slope, at each of the integer coordinates. This gives Perlin noise the category of gradient noise, as opposed to if the values were simply interpreted as values, as in value noise. For simplicity, this pseudo-random gradient value will be represented by \(y\). In one dimension, gradients are one dimensional! Since computers do not have infinite storage, either a limit will be imposed to the number of coordinate-value pairs being generated at a time, or the noise algorithm will loop, and set the last coordinate's next coordinate to be the first coordinate, or a hashing function can be used (\ref{subsec:hashing}). The goal is to determine the \(y\) value at a coordinate, or set of coordinates at a non-integer \(x\) coordinate.
+		
+		Since arbitrary input \(x\) coordinate can have difference distances from the two closest integer coordinates, the influence of the gradient value of each of these integer coordinates must be found. These two influence values can be determined by the distance vector from each coordinate, multiplied by the gradient value at each point. 
+		
+		The two closest integer coordinates must be found first. To do this, round the input \(x\), and subtract one if the value was rounded down, else add one. This can also be accomplished through the use of a floor or ceiling function, or casting the float input, \(x\) as an integer. This will get the values in red, shown in \autoref{fig:lower_upper}
+		
+		\begin{lstlisting}[label={lst:minmax}, language=Python, frame=none, caption={An example of finding the min and max bounds in 1D Perlin noise, given input x.}, captionpos=b]
+			x_min = int(x)
+			x_max = x_min + 1
+		\end{lstlisting}
+	
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.75]{lower_upper}
+			\captionof{figure}{The lower and upper integer bounds for an arbitrary input.}
+			\label{fig:lower_upper}
+		\end{minipage}
+	
+		Vectors from the input coordinate to the two neighboring integer coordinates can then be calculated by subtracting each integer coordinate from the input \(x\) value. This gives a distance vector (which is one-dimensional in this case).
+	
+		\begin{lstlisting}[label={lst:dst}, language=Python, frame=none, caption={Calculating the distance.}, captionpos=b]
+			d0 = x - x_min
+			d1 = x - x_max
+		\end{lstlisting}
+	
+		Now, both vectors necessary for the two influence values have been determined, giving a total of four vectors. The dot product of the distance vector and the respective gradient value can now be found. In the example below, the gradient values are being held in a one dimensional matrix of pseudo-random values, named \lstinline|lattice1d|
+		
+		\begin{lstlisting}[label={lst:influence}, language=Python, frame=none, caption={Calculating the influence values.}, captionpos=b]
+			s = lattice1d[x_min] * d0
+			t = lattice1d[x_max] * d1
+		\end{lstlisting}
+	
+		Finally, these two values can be linearly interpolated with \(x - x_min\). This calculation is to put the x value into the interval of \([x_min, x_max]\).
+		
+		\begin{lstlisting}[label={lst:perlin_linear}, language=Python, frame=none, caption={Linear interpolation of influence values}, captionpos=b]
+			x = x - x_min
+			return lerp(s, t, x)
+		\end{lstlisting}
+	
+		Iterating this function over the interval of \([0,10]\) results in the graph shown in \ref{fig:perlin_lin}. Note the jaggedness of the graph. This is the result of only using linear interpolation.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{perlin_lin}
+			\captionof{figure}{Example of Perlin noise using linear interpolation.}
+			\label{fig:perlin_lin}
+		\end{minipage}
+	
+		To smooth out the graph, a smoothing function, such as smoothstep interpolation can be applied to the input \(x\) values to make changes more gradual when approaching the integer coordinates. The suggested formula by Perlin for this interpolation was \(3t^2 - 2t^3\), but has since been superseded. One of the problems with the previous equation used was that the second derivative of the function, \textbf{6-12t} is not zero at either \textbf{t=0} or \textbf{t=1}, causing discontinuities in the noise. Some of the effects of this are shown in \autoref{fig:pnartifact}.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{s-curve}
+			\captionof{figure}{Removal of artifacting at t=0 and t=1 from revised interpolation function \cite{10.1145/566654.566636}}
+			\label{fig:pnartifact}
+		\end{minipage} 
+		
+		This led the improved equation. 
+		
+		\[t = 6t^5 - 15t^4 - 10t^3\]
+		
+		Putting it all together with smoothstep interpolation, Perlin noise can be implemented as such. 
+		
+		\begin{lstlisting}[label={lst:perlin1d}, language=Python, frame=none, caption={1D Perlin Noise}, captionpos=b]
+			def perlin1d(x, lattice):
+			
+				x_min = int(x)
+				x_max = x_min + 1
+				
+				xu = x - x_min
+				xu = smoothstep(xu)
+				
+				d0 = x - x_min
+				d1 = x - x_max
+				
+				# Influence values
+				s = lattice[x_min] * d0
+				t = lattice[x_max] * d1
+				
+				return lerp(s, t, xu)
+			
+			# Linear Interpolation
+			def lerp(low, high, t):
+				return low * (1-t) + high * t
+			
+			# Smoothstep
+			def smoothstep(t):
+				# 6t^5 - 15t^4 - 10t^3
+				return t * t * t * (t * (t * 6 - 15) + 10)
+		\end{lstlisting}
+	
+		This implementation results in noise such as the one depicted in \autoref{fig:perlin1d}.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{perlin1d}
+			\captionof{figure}{One-dimensional Perlin noise.}
+			\label{fig:perlin1d}
+		\end{minipage} 
+	
+		\section{2-Dimensional}
+		
+		In two-dimensional Perlin noise, the associated lattice is a coordinate grid. The algorithm functions the same as one-dimensional Perlin noise, but instead of two surrounding points and working in a one-dimensional unit, two-dimensional Perlin noise works with four surrounding integer coordinate points, a unit square. Each of the corner points on the unit square now has a two dimensional gradient vector, holding the pseudo-randomly generated values. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=1.0]{cornergridpoints}
+			\captionof{figure}{Arbitrary coordinate, surrounded by integer coordinate points (unit square) \cite{pn-math}.}
+			\label{fig:cornergridpoints}
+		\end{minipage} 
+	
+		Now, four influence values need to be calculated. Given a new two-dimensional coordinate point of \((x,y)\), the same operations must be taken. First, the minimum and maximum bounds must be found for both the \(x\) and \(y\), the same way they were found in one dimension. The combination of these four values results in the four corner points of the unit square surrounding the point of interest. The distance vectors are calculated the same way. 
+		
+		\begin{lstlisting}[label={lst:2d-dst}, language=Python, frame=none, caption={Calculating the distance for two-dimensions.}, captionpos=b]
+			dx0 = x - x_min
+			dx1 = x - x_max
+			
+			dy0 = y - y_min
+			dy1 = y - y_max
+		\end{lstlisting}
+	
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=0.75]{2d_dist}
+			\captionof{figure}{Example distance vector calculation \cite{pn-under}.}
+			\label{fig:2d_dist}
+		\end{minipage} 
+	
+		Then, the dot product of the distance vectors and their respective gradient vector is calculated. 
+		
+		\begin{lstlisting}[label={lst:2d-infl}, language=Python, frame=none, caption={Calculating the influence values for two-dimensions.}, captionpos=b]
+			s = np.dot(lattice[x_min, y_min], [dx0, dy0])
+			t = np.dot(lattice[x_max, y_min], [dx1, dy0])
+			u = np.dot(lattice[x_min, y_max], [dx0, dy1])
+			v = np.dot(lattice[x_max, y_max], [dx1, dy1])
+		\end{lstlisting}
+	
+		Following this, the influence values must be interpolated. To do this, we can take three linear interpolations. 
+		
+		\begin{lstlisting}[label={lst:2d-interp}, language=Python, frame=none, caption={Calculating the interpolated final value.}, captionpos=b]
+			v0 = lerp(s, t, xu)
+			v1 = lerp(u, v, xu)
+			
+			return lerp(v0, v1, yu)
+		\end{lstlisting}
+	
+		\begin{lstlisting}[label={lst:2d-perlin}, language=Python, frame=none, caption={Two-dimensional Perlin noise.}, captionpos=b]
+			def perlin2d(x, y, lattice):
+			
+				x_min = int(x)
+				x_max = x_min + 1
+				
+				y_min = int(y)
+				y_max = y_min + 1
+				
+				xu = x - x_min
+				xu = smoothstep(xu)
+				
+				yu = y - y_min
+				yu = smoothstep(yu)
+				
+				dx0 = x - x_min
+				dx1 = x - x_max
+				
+				dy0 = y - y_min
+				dy1 = y - y_max
+				
+				# Influence values
+				s = np.dot(lattice[x_min, y_min], [dx0, dy0])
+				t = np.dot(lattice[x_max, y_min], [dx1, dy0])
+				u = np.dot(lattice[x_min, y_max], [dx0, dy1])
+				v = np.dot(lattice[x_max, y_max], [dx1, dy1])
+				
+				v0 = lerp(s, t, xu)
+				v1 = lerp(u, v, xu)
+				
+				return lerp(v0, v1, yu)
+			
+			# Linear Interpolation
+			def lerp(low, high, t):
+				return low * (1-t) + high * t
+			
+			# Smoothstep
+			def smoothstep(t):
+				# 6t^5 - 15t^4 - 10t^3
+				return t * t * t * (t * (t * 6 - 15) + 10)
+		\end{lstlisting}
+		
+		\section{3-Dimensional}
+		
+		Three dimensional Perlin noise follows the same pattern. In one dimension, calculations were required for each of the two points surrounding the point in question. In two dimensions, calculations were required for the four points of the unit square. In three, this becomes eight for the unit cube. From this, Perlin noise's runtime scaling can be determined - \(O(2^k)\), where \(k = dimensionality\). 
+		
+		\section{N-Dimensional}
+		
+		While Perlin noise saw great success, it was succeeded by algorithms such as Simplex noise, designed to alleviate some of the problems with Perlin noise. This included the computational complexity and the artifacting in the noise created. The artifacting in the noise appears from the necessity for the gradients to pass through zero at the integer coordinates of the lattice. This causes unavoidable artifacting in the noise. In addition, while Perlin noise's computational complexity is acceptable when in three-dimensional space and lower, it suffers greatly from increasing the dimensionality further. Beyond three-dimensional space and its unit cubes, four-dimensional space and beyond's unit cube equivalent is known as a hypercube. The number of corners a hypercube has is \(O(2^k)\), where \(k = dimensionality\). This runtime scaling makes higher dimensions incredibly hard to calculate. 
+		
+		Simplex noise was designed to address some of the limitations of the original Perlin noise. Since the original implementation of Perlin noise was constrained by the lattice gradient function creating directional artifacts, one of the goals of Simplex noise was to overcome this limitation. In addition, Simplex noise has lower computational complexity -- O(k\textsuperscript{2}) instead of O(2\textsuperscript{k})\cite{sheet-simplex}. Other benefits includes the capability to scale to higher dimensions, a well-defined and continuous gradient, as well as simpler implementation. Instead of the lattice gradients that Perlin noise works on, and that give Perlin noise its computational complexity, Simplex noise works based on simplex grids for which it was named after. This involves choosing the simplest, repeatable shape to fill a N-dimensional space. Another definition of a n-simplex would be it being the smallest figure that contains \(n+1\) given points in n-dimensional space, while not lying in the space of a lower dimension. In one dimension, this works by choosing repeating line segments, similarly to Perlin noise. In two dimensions, this becomes an equilateral triangle, contrary to the unit square of Perlin noise. In three dimensions, this becomes a trianglular pyramid, also known as a tetrahedron. From four dimensions and onward, this simplex becomes increasingly difficult to visualize. However, there is a pattern in the drawability of simplexes, by creating a new point and connecting it to all previously existing points.
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.75]{six simplexes}
+			\captionof{figure}{The first six simplexes \cite{higher-dim-simplexes}}
+			\label{fig:fig2}
+		\end{minipage}
+		
+		The relative simplicity of the simplex shape in having as few corners as possible makes it a lot easier to interpolate values in the interior of the shape, relative to the hypercubes used in the original Perlin noise.
+		
+		In the original Perlin noise function, derivatives were used to compute the gradation between the points. This creates a large increase in computational complexity based on dimensionality. Simplex noise instead uses the summation of kernel values to determine the point's value. To generate the Simplex noise, the value for any point in space must be determined. In two dimensional space, this means skewing the coordinate space along the main diagonal, transforming the squashed equilateral triangles into right-angle isosceles triangles. From there, determining the location is made more simple, as just the integer part of the coordinates is needed for each dimension. Beyond two dimensions, the visualization becomes more difficult, but the methods remain the same.  
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.5]{skewed grid}
+			\captionof{figure}{Skewing in two-dimensional space and determining the cell containing a point. \cite{simplex-demyst}}
+			\label{fig:fig9}
+		\end{minipage}
+		
+		The traversal scheme for a two-dimensional simplex is built around this triangular method. If the x and y coordinates are known, then all that is needed is to determine which of the two simplices the point lies in. If x > y, the corners become (0,0), (1,0) and (1,1), else the corners are (0,0), (0,1) and (1,1). To traverse this, only one step in the x and one step in the y is needed, but in a different order for each of the simplices. This technique can then be generalized to any arbitrary amount of N dimensions \cite{simplex-demyst}. While Perlin noise has many advantages over the classical Perlin noise, it has a different visual characteristic, making it difficult to directly replace or compare the two. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.25]{perlin vs simplex}
+			\captionof{figure}{A comparison of Perlin and Simplex noise \cite{simplex-demyst}}
+			\label{fig:fig4}
+		\end{minipage}
+		
+		However, with additional modification using multiple layers or octaves, Simplex noise will run much more computationally efficiently, as well as replicating the visual quirks of Perlin noise.
+		
+		\section{Modifications}
+		
+		
+	\vspace{10pt}
+	\let\clearpage\relax
+	\chapter{Data Structures} \label{chap:data_structures}
+	
+		\subsection{Height Maps}
+			PGC has the advantage of being able to be recreated through the use of the correct seed and algorithm. For example, one method to efficiently store the topological data generated from a procedural algorithm is to break it into smaller pieces. These pieces may be known as chunks \cite{tiling}. This compartmentalizes the procedural algorithm.
+			
+			Another common method of storing topological data is through the use of height maps. 
+			
+			\begin{minipage}{\textwidth}
+				\centering
+				\includegraphics[scale=.5]{D10}
+				\captionof{figure}{An example of a height map. \cite{voxel-space}}
+				\label{fig:height-map}
+			\end{minipage}
+			
+			The use of height maps is related to the development of some image based methods of rendering and displaying procedural content. A height map works by storing a single height value at each \[(x,y)\] coordinate. Height maps work similarly to topological maps, with an example of the latter shown in \autoref{fig:top-map}.
+			
+			\begin{minipage}{\textwidth}
+				\centering
+				\includegraphics[scale=.5]{top-map}
+				\captionof{figure}{A topological map is shown, with a corresponding three-dimensional representation of the map data below. \cite{top-map}}
+				\label{fig:top-map}
+			\end{minipage} 
+		
+			Height maps can be combined with a color map of the same dimensions, in order to map colors to each of the height locations. This effect can be seen in the voxel space rendering technique, shown in \ref{sec:imagebasedmethods} In terms of generating geological formations for landmarking a terrain, height maps add additional limitations on the possibilities. Height maps are unable to store multiple data values at each point, without significant complexity in interpreting the resultant data. This makes the generation of overhangs, arches, or any feature with protruding structures, difficult without additional data storage for these exceptions. A possible solution for this issue includes the storage of overhangs or similar features separately.
+		
+	\vspace{10pt}
+	\let\clearpage\relax
+	\chapter{Rendering Methods}
+	
+		Representing the data generated procedurally is another task with a variety of solutions. Some of these methods include pixel-based methods, polygons, and voxels. One common, simplistic way to represent the data generated is to use ASCII characters, or other types of two-dimensional data such as colored pixels to convey the scene that is being represented. In the case of Dwarf Fortress, the use of ASCII symbols is used to represent the elements within the game, shown in \autoref{fig:asciidf}. The interpretation of procedurally generated data will be expanded upon in \autopageref{chap:interpret}
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -154,227 +489,6 @@
 			\captionof{figure}{ASCII representation of PGC. \cite{df-dev}}
 			\label{fig:asciidf}
 		\end{minipage}
-		
-		Polygonal meshes are a way of representing three-dimensional objects. These are created through polygons (typically triangles) joined by at least two vertices. These polygons are then represented by the coordinates of the vertices that compose them, while the space between the vertices acts as the viewable portion.
-		
-		Voxels represent a volume element in space. These are placed in a regularly spaced grid of similar values. These values in space can contain multiple data points, such as opacity, color, geometry (for example, cubes), among other things. Voxels are represented by their position relative to other voxels, allowing for easier representation of layers of geometry. 
-		
-	\vspace{10pt}
-	\let\clearpage\relax
-	\chapter{History}
-	
-		\section{Fractals}
-		Brownian motion was one of the starting points for procedural algorithms, used to describe the random motion of particles within water. Robert Brown first described this natural phenomenon in 1827. The stochastic process behind Brownian motion was later mapped into an algorithm almost a century later, a method called the Wiener process \cite{inbook}. A standard Wiener process on the interval \([0,T]\) is a random variable \(W(t)\), where \(t \in [0,T]\). This must satisfy the following:
-		
-		\begin{itemize}
-			\item \(W(0) = 0\)
-			\item \(For 0 \leq s < t \leq T\) 
-		\end{itemize}
-		
-		\(W(t) - W(s) ~ \sqrt{t - s} N(0,1)\), where \(N(0,1)\) is a normal distribution with zero mean and unit variance. 
-		
-		\begin{itemize}
-			\item For \( 0 \leq s < t < u < v \leq T\), \(W(t) - W(s)\) and \(W(v) - W(u)\) are independent.
-		\end{itemize}
-	
-		On a computer, \(N(0,1)\) can be obtained by the use of a random method, as long as they meet the criteria \cite{wiener-process}. 
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.3]{wiener-process}
-			\captionof{figure}{A Wiener process \cite{wiener-process}}
-			\label{fig:wiener-proc}
-		\end{minipage} 
-		
-		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s (See \autoref{sec:fractal}), but developed in the decades to come. This development in capturing surface topography was fueled by Mandelbrot's claim that all forms of nature can only be adequately described using fractals. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. Generating fractal structures ran into issues with processing time, causing a need for an alternative \cite{inbook}. However, this early PGC found its use in \emph{Star Trek II: The Wrath of Khan} \cite{startrek} to procedurally create imaginary planets. This technology was used later on in an accompaniment to a SIGGRAPH paper to demonstrate more of the ability of fractals. This set the stage for further use in movies such as \emph{The Last Starfighter} and \emph{Return of the Jedi} \cite{ibm-fractal}. 
-		
-		\section{Cellular Automata}
-		
-		During the development of fractals, cellular automata also were studied and gained traction. Cellular automata were originally proposed by John von Neumann, focusing on their structure in one and two dimensional grids. This idea was eventually extended into games by John Conway, with the motivation to design a simple set of rules to study the behavior of a population. By tuning different configurations, the "Game of Life" demonstrated a variety of growth patterns stemming from the initial population. Another example of the application of early cellular automata research to games was the \(\sigma(\sigma\textsuperscript{+})\) game, proposed by Sutner. This utilized the capabilities of cellular automata in a 2-d finite grid in order to have two players play against each other \cite{10.1145/349194.349202}.
-		
-		\section{Noise}
-		
-		In a similar period, Perlin noise was developed for use in the movie industry as well. It later became a foundation for many other procedural generation algorithms. It was developed in 1983 for use in the sci-fi movie Tron, to map textures onto computer generated surfaces for visual effects. Perlin noise has been used for many visual elements, ranging from the texture creation it was created for to particle effects such as fire, smoke and clouds, as well as landscapes and geological features. It has a variety of uses due to its ability to create a naturalistic appearance \cite{10.1145/325165.325247}.
-		
-		\section{Applications}
-		One of the earliest usages of PGC in video games was in Rogue, in 1980 \cite{rogue}. This initial attempt at generating a dungeon in a random manner addressed some of the differences between procedural generation and purely random generation, by introducing some level of control to the designer. Rogue addressed this by using a three by three grid to generate the layout of the level, with hallways randomly connecting the rooms. These rooms would have a variable size to increase the variety of levels producible by the algorithm. This technique in particular, was created to address the memory constraints of computers at the time, as even with this more mathematical and less memory intensive approach, levels would need to be cleared from memory when moving on to the next one \cite{rogue}.
-		
-		% can add more here if have time...
-
-	\vspace{10pt}
-	\let\clearpage\relax
-	\chapter{Procedural Generation Methods}
-		\section{Cellular Automata}
-			Cellular automata are composed of n-dimensional grid of uniform cells, each containing a state. For example, a one-dimensional cellular automata would be a row of cells. These cells are governed by a certain set of rules which are dependent on the neighborhood of cells, which can have a multitude of definitions. Typically, a neighborhood is just defined as the adjacent cells. The rules of a cellular automata determine the state of cells in the next generation, which indicates the next step of the algorithm. Each generational step updates the state of cells according to the defined rules. In \autoref{fig:cell-30}, an example of cellular automata is shown, with each row representing an iteration of the algorithm.
-			
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=0.8]{rule-30}
-				\captionof{figure}{1-Dimensional cellular automata example. Each row is an iteration, following the eight rules at the bottom \cite{cell-30}.}
-				\label{fig:cell-30}
-			\end{minipage}
-		
-			This algorithm follows the eight rules below the pyramidal structure, with the initial state consisting of an even padding of white cells surrounding one black cell. For cellular automata, the recursive nature of the algorithm causes the growth and evolution over time, as seen above. While this cellular automata example works based off of a neighborhood definition of just the adjacent cells, this definition is malleable, and controllable by the user, allowing for a wide variety of different outcomes with minor adjustments. Cellular automata's methodology is similar to other types of procedural algorithms, as the input state of the n-dimensional grid acts as the "seed" for the cellular automata. This can vary widely in output based on the set of rules and definition of neighborhood given. It can be seen in \autoref{fig:cell-30} that cellular automata are even capable of replicating the appearance of fractal structures, and mimic their recursive nature. Cellular automata can run into the issue of setting the initial input, as for physical computers, having an infinite input size is not possible. For this problem, there are three possible solutions. 
-			
-			\begin{enumerate}
-				\item \textbf{Edges remain constant.} Edges will not be evaluated by the algorithm.
-				\item \textbf{Edges wrap around.}
-				\item \textbf{Edges have different neighborhoods and rules.} \cite{nature-of-code}
-			\end{enumerate}
-			
-			While cellular automata can have a large variety of possibilities, the majority of simplistic rulesets will not produce satisfying outcomes. The different range of outcomes of cellular automata have been divided into four classes by Wolfram.
-			
-			\begin{enumerate}
-				\item \textbf{Uniformity.} After a number of generations, every cell becomes constant.
-				\item \textbf{Repetition.} Similarly to class 1, the cellular automata becomes constant, but the cell states themselves shift in a periodic pattern.
-				\item \textbf{Randomness.} The cellular automata and the cells have no discernible pattern. 
-				\item \textbf{Complexity.} The cellular automata will have repeating patterns, but the patterns location and place in the process itself will not have a pattern \cite{nature-of-code}. 
-			\end{enumerate}
-
-		\section{Fractals} \label{sec:fractal}
-			Using fractal methods for PGC is another way of generating data. Fractals are objects with a recursive, or repeating, definition. These objects have a self similarity at different levels of magnification. For example, the Koch snowflake demonstrated one of the rules of fractals in a geometrical point of view. By repeating two rules, it was possible to generate complex shapes.
-			
-			\begin{enumerate}
-				\item Draw an Equilateral triangle
-				\item Replace all lines as follows, and repeat 2
-			\end{enumerate}
-		
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=0.5]{m_reprule}
-				\captionof{figure}{Rule of the Koch snowflake \cite{fractal-landscapes}.}
-				\label{fig:m_reprule}
-			\end{minipage}
-		
-			After several iterations of this rule, \autoref{fig:m_koch} is the result.
-			
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=0.5]{m_koch}
-				\captionof{figure}{Koch snowflake \cite{fractal-landscapes}.}
-				\label{fig:m_koch}
-			\end{minipage}
-			
-			To use fractals to generate geological formations, the initial fractal algorithm must be modified. While fractals can be used in their base form for PGC, additional modifications to add controlled randomness are necessary to incorporate features from more realistic landscapes. By using multiple rules of replacement, rather than the single one from the Koch snowflake, through a deterministically random selection, a more naturalistic output can be achieved. One example of generating these fractal surfaces is through displacement noise. One example of the effect of displacement noise can be seen in \autoref{fractal_displacement1}, where a fractal displacement noise pattern is added to an image to distort the image. 
-			
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=1.0]{fractal_displacement1}
-				\captionof{figure}{Example of fractal displacement to distort an image. \cite{fractal_displacement1}.}
-				\label{fig:fractal_displacement1}
-			\end{minipage}
-			
-			An example recursive process for generating a fractal landscape involves the use of a heightmap (See \autoref{chap:storing_data}). For now, the initial starting point can be a grid of heights. Interpolation is a type of estimation for the value between two points, whether by averaging (linear interpolation), or some other function. The height of the points between these two values can be determined through interpolation, and a controlled random value can be added to them. 
-			
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=0.5]{m_alg1}
-				\captionof{figure}{Interpolation of height values. Red points are the initial set, black points are the interpolated values to which the random values are added. \cite{fractal-landscapes}.}
-				\label{fig:m_alg1}
-			\end{minipage}
-		
-			One issue with this method of interpolating values is the creation of a relatively square region for each interpolation. This can me mitigated with the Diamond-Square fractal generation method, shown in \autoref{label}. By using multiple steps to find the values of the interpolated points, the square shape is minimized. 
-		
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=1.0]{diamond_square}
-				\captionof{figure}{Steps are show left to right. The left-most figure shows the initial points to be interpolated. From there, gray dots represent the points from the previous step, while the black dots show the newly interpolated points. \cite{diamond_square}.}
-				\label{fig:diamond_square}
-			\end{minipage}
-			
-			Other methods of PGC are closely related to fractals as well. For example, while Perlin noise can be interpreted from a signals point of view, Perlin noise's output is also an example of the procedural generation of fractal surfaces using gradient noise \cite{fractal-landscapes}.
-		
-		\section{Noise}
-			Noise refers a general concept of randomness often used in signals, but can also be applied as one of the procedural process used for PGC. In signals, noise is unpredictable and random, carrying no information. For PGC, noise can be modified to contain some level of consistency through the use of filtering and additional algorithms, to enable the noise to be interpreted in a useful manner. This difference can be seen in \autoref{fig:perlinnoise}, where the creation of noise is modified to produce a more interpretable and internally consistent output. 
-			
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=0.3]{perlinnoise}
-				\captionof{figure}{Using the same set of input random numbers and the same algorithm, Perlin noise will always replicate this result.}
-				\label{fig:perlinnoise}
-			\end{minipage}
-		
-			Noise created in this manner runs into an issue of uniformity. In signal terms, this means that noise is band-limited, where almost all of the energy of the noise is concentrated in a very small part of the frequency spectrum. An example of is shown in \autoref{fig:bandlimit}, where applying a band-limiting effect smooths out the function.
-			
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=.5]{bandlimiting-filter}
-				\captionof{figure}{Applying a band-limiting filter \cite{bandlimiter}}
-				\label{fig:bandlimit}
-			\end{minipage}
-			
-			The high and low frequencies of the original image would be blended out, and only the band-limited output image would remain, where the high and low frequencies contribute less to the total energy \cite{making-noise}. This can be mitigated by the use of layering differing octaves of noise to increase the amount of variation given by the noise. The term octave is borrowed from music, but when used in this context refers to the use of multiple noise functions combined, in order to create a more varied result with identifiable features. In \autoref{fig:perlin_octaves}, this effect of combining multiple octaves of noise can be seen.
-			
-			\begin{minipage}{\textwidth}
-				\centering
-				\includegraphics[scale=.4]{perlin_octaves}
-				\captionof{figure}{Multiple Perlin Noise octaves combined. The dotted graph is the resultant noise.\cite{perlin-octaves}}
-				\label{fig:perlin_octaves}
-			\end{minipage}
-	
-			\subsection{Perlin Noise}
-		
-				One example of generating noise is through the use of the Perlin noise algorithm, named after Ken Perlin. The original implementation of Perlin noise was to create representations of various textures for objects, as well as representations of clouds, fire, water and stars among other things \cite{10.1145/325165.325247}. In other words, given an input point P, look at the surrounding points on the grid. In one dimension, this would be a series of line segments. 
-				
-				\begin{minipage}{\textwidth}
-					\centering
-					\includegraphics[scale=.5]{noise-value-vs-perlin3}
-					\captionof{figure}{Perlin Noise gradients in one dimension \cite{pn-2}}
-					\label{fig:pnoise1d}
-				\end{minipage} 
-				
-				In two-dimensions there will be four points, due to the surrounding unit square, in three-dimensions there will be eight, due to the surrounding unit cube. Similarly to how in two dimensions space is parameterized by a lattice of integer squares, in three-dimensional space it is parameterized by a series of cubes. As Perlin noise scales up, this n-dimensional square/cube grows larger and larger in complexity, increasing the run time. For each of these surrounding grid points, Q, a pseudo-random gradient vector, G is chosen. This gradient is pseudo-random because, while the initial determination of the gradient vector's value is randomized, when inputting the same grid point the same gradient vector is chosen. In the calculation of Perlin noise, all of the points on the grid are located at zero. This attribute of Perlin noise can be seen in \autoref{fig:pnoise1d}. From there, the inner product is calculated between all of the surrounding grid points, the chosen point, and the gradient vectors. This results in \(G * (P - Q)\), giving 2\textsuperscript{n} values, where n represents the dimensionality of the grid. Then, interpolate between the values down to P, using an S-shaped cross-fade curve to weigh the interpolation in each dimension. This equation is shown below.
-				
-				\begin{lstlisting}[language=C]
-					3t^2 - 2t^3
-				\end{lstlisting}
-				% cite? https://mrl.cs.nyu.edu/~perlin/doc/oscar.html#noise
-				
-				This was the original equation used for Perlin noise, but has since been superceeded. One of the problems with the previous equation used was that the second derivative of the function, \textbf{6-12t} is not zero at either \textbf{t=0} or \textbf{t=1}, causing discontinuities in the noise. Some of the effects of this are shown in \autoref{fig:pnartifact}. This led to the equation shown below to be used. 
-				
-				\begin{lstlisting}[language=Java]
-					6t^5 - 15t^4 + 10t^3
-				\end{lstlisting}
-				% cite? https://mrl.cs.nyu.edu/~perlin/noise/
-				
-				This new equation led to an approximate ten percent speed increase compared to the original implementation. 
-				
-				\begin{minipage}{\textwidth}
-					\centering
-					\includegraphics[scale=.5]{s-curve}
-					\captionof{figure}{Removal of artifacting at t=0 and t=1 from revised interpolation function \cite{10.1145/566654.566636}}
-					\label{fig:pnartifact}
-				\end{minipage} 
-				
-				While Perlin noise saw great success, it was succeeded by algorithms such as Simplex noise, designed to alleviate some of the problems with Perlin noise. This included the computational complexity and the artifacting in the noise created. The artifacting in the noise appears from the necessity for the gradients to pass through zero, as shown in \autoref{fig:pnartifact}. This causes unavoidable artifacting in the noise. In addition, while Perlin noise's computational complexity is acceptable when in three-dimensional space and lower, it suffers greatly from increasing the dimensionality further.
-		
-	\vspace{10pt}
-	\let\clearpage\relax
-	\chapter{Storing Data} \label{chap:storing_data}
-	
-		PGC has the advantage of being able to be recreated through the use of the correct seed and algorithm in many cases. Another common method of storing topological data is through the use of height maps. 
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.5]{D10}
-			\captionof{figure}{An example of a height map. \cite{voxel-space}}
-			\label{fig:height-map}
-		\end{minipage}
-		
-		The use of height maps is related to the development of some image based methods of rendering and displaying procedural content. A height map works by storing a single height value at each \[(x,y)\] coordinate. Height maps work similarly to topological maps, with an example of the latter shown in \autoref{fig:top-map}.
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.5]{top-map}
-			\captionof{figure}{A topological map is shown, with a corresponding three-dimensional representation of the map data below. \cite{top-map}}
-			\label{fig:top-map}
-		\end{minipage} 
-	
-		Height maps can be combined with a color map of the same dimensions, in order to map colors to each of the height locations. This effect can be seen in the voxel space rendering technique, shown in \ref{sec:imagebasedmethods} In terms of generating geological formations for landmarking a terrain, height maps add additional limitations on the possibilities. Height maps are unable to store multiple data values at each point, without significant complexity in interpreting the resultant data. This makes the generation of overhangs, arches, or any feature with protruding structures, difficult without additional data storage for these exceptions. A possible solution for this issue includes the storage of overhangs or similar features separately. Voxel based methods, or mesh based systems to store the terrain data instead have also been used.  
-		
-	\vspace{10pt}
-	\let\clearpage\relax
-	\chapter{Rendering and Display}
 	
 		\section{Image Based Methods} \label{sec:imagebasedmethods}
 		
@@ -475,11 +589,56 @@
 		
 	\vspace{10pt}
 	\let\clearpage\relax
+	\chapter{Interpretation} \label{chap:interpret}
+		
+		Procedural algorithms only generate a set of values. In order to transform these values into PGC, it must be interpreted into the desired outcome. Ultimately, this is a very subjective task, but this paper will cover three possible examples of interpretation. 
+		
+		One method of interpreting data is to interpret the values given from procedural generation into a tileset. This method can be seen in the example of Dwarf Fortress, given above. 
+	\vspace{10pt}
+	\let\clearpage\relax
 	\chapter{Development}
+		
+		\section{Fractals}
+		Brownian motion was one of the starting points for procedural algorithms, used to describe the random motion of particles within water. Robert Brown first described this natural phenomenon in 1827. The stochastic process behind Brownian motion was later mapped into an algorithm almost a century later, a method called the Wiener process \cite{inbook}. A standard Wiener process on the interval \([0,T]\) is a random variable \(W(t)\), where \(t \in [0,T]\). This must satisfy the following:
+		
+		\begin{itemize}
+			\item \(W(0) = 0\)
+			\item \(For 0 \leq s < t \leq T\) 
+		\end{itemize}
+		
+		\(W(t) - W(s) ~ \sqrt{t - s} N(0,1)\), where \(N(0,1)\) is a normal distribution with zero mean and unit variance. 
+		
+		\begin{itemize}
+			\item For \( 0 \leq s < t < u < v \leq T\), \(W(t) - W(s)\) and \(W(v) - W(u)\) are independent.
+		\end{itemize}
+		
+		On a computer, \(N(0,1)\) can be obtained by the use of a random method, as long as they meet the criteria \cite{wiener-process}. 
+		
+		\begin{minipage}{\textwidth}
+			\centering
+			\includegraphics[scale=.3]{wiener-process}
+			\captionof{figure}{A Wiener process \cite{wiener-process}}
+			\label{fig:wiener-proc}
+		\end{minipage} 
+		
+		The beginning of the use of fractals to describe landscapes did not coincide with the conception of the term "fractal" by Mandelbrot in the 1970s (See \autoref{sec:fractal}), but developed in the decades to come. This development in capturing surface topography was fueled by Mandelbrot's claim that all forms of nature can only be adequately described using fractals. While the potential of fractals to encapsulate and generate this geometry was noticed in the early 1990s, research at the time was still immature and unable to fully link the processes which create the forms captured by fractals. In terms of general landscapes, fractals were discovered to be able to imitate the self-similarity present in limited regions and limited ranges of scale in real landscapes. Some of the problems in furthering this research included the difficulty in researching and representing the dimensionality of natural terrain \cite{XU1993245}. Generating fractal structures ran into issues with processing time, causing a need for an alternative \cite{inbook}. However, this early PGC found its use in \emph{Star Trek II: The Wrath of Khan} \cite{startrek} to procedurally create imaginary planets. This technology was used later on in an accompaniment to a SIGGRAPH paper to demonstrate more of the ability of fractals. This set the stage for further use in movies such as \emph{The Last Starfighter} and \emph{Return of the Jedi} \cite{ibm-fractal}. 
+		
+		\section{Cellular Automata}
+		
+		During the development of fractals, cellular automata also were studied and gained traction. Cellular automata were originally proposed by John von Neumann, focusing on their structure in one and two dimensional grids. This idea was eventually extended into games by John Conway, with the motivation to design a simple set of rules to study the behavior of a population. By tuning different configurations, the "Game of Life" demonstrated a variety of growth patterns stemming from the initial population. Another example of the application of early cellular automata research to games was the \(\sigma(\sigma\textsuperscript{+})\) game, proposed by Sutner. This utilized the capabilities of cellular automata in a 2-d finite grid in order to have two players play against each other \cite{10.1145/349194.349202}.
+		
+		\section{Noise}
+		
+		In a similar period, Perlin noise was developed for use in the movie industry as well. It later became a foundation for many other procedural generation algorithms. It was developed in 1983 for use in the sci-fi movie Tron, to map textures onto computer generated surfaces for visual effects. Perlin noise has been used for many visual elements, ranging from the texture creation it was created for to particle effects such as fire, smoke and clouds, as well as landscapes and geological features. It has a variety of uses due to its ability to create a naturalistic appearance \cite{10.1145/325165.325247}.
+		
+		\section{Applications}
+		One of the earliest usages of PGC in video games was in Rogue, in 1980 \cite{rogue}. This initial attempt at generating a dungeon in a random manner addressed some of the differences between procedural generation and purely random generation, by introducing some level of control to the designer. Rogue addressed this by using a three by three grid to generate the layout of the level, with hallways randomly connecting the rooms. These rooms would have a variable size to increase the variety of levels producible by the algorithm. This technique in particular, was created to address the memory constraints of computers at the time, as even with this more mathematical and less memory intensive approach, levels would need to be cleared from memory when moving on to the next one \cite{rogue}.
+		
+		% can add more here if have time...
 
 		\section{Areas of Research}
 	
-		An ongoing area of research for PGC is the introduction of neural networks as the framework, instead of more traditional algorithms or techniques. One example of this is the procedural generation of terrain via Tensorflow. This implementation was trained on a large data-set of terrain height maps, around 10,000, with the addition of satellite data to use for coloring. The specific neural network involved in the implementation was a Generative Adversarial network, which works on creating fake images, and attempting to discern between real and fake. By iterating this, the network will get better at both tasks, with the generator learning how to create more and more realistic images. For the problem of coloring the terrain, a style network was used to take two images and blend them to create an output image that looks like the content image, but with the style of the reference image. This technique is used in other applications, such as the neural networks trained on recreating photographs in a particular artist's style, shown in \autoref{fig:neural-style}. 
+		An ongoing area of research for PGC is the introduction of neural networks as the framework. One example of this is the procedural generation of terrain via Tensorflow. This implementation was trained on a large data-set of terrain height maps, around 10,000, with the addition of satellite data to use for coloring. The specific neural network involved in the implementation was a Generative Adversarial network (\cite[see]{goodfellow2014generative}), which works on creating fake images, and attempting to discern between real and fake. By iterating this, the network will get better at both tasks, with the generator learning how to create more and more realistic images. For the problem of coloring the terrain, a style network was used to take two images and blend them to create an output image that looks like the content image, but with the style of the reference image. This technique is used in other applications, such as the neural networks trained on recreating photographs in a particular artist's style, shown in \autoref{fig:neural-style}. 
 		
 		\begin{minipage}{\textwidth}
 			\centering
@@ -510,37 +669,7 @@
 		
 		\cite{Liu_2020}
 		
-		\section{Algorithm Advancements}
-		
-		Perlin noise was designed to address some of the limitations of the original Perlin noise. Since the original implementation of Perlin noise was constrained by the lattice gradient function creating directional artifacts, one of the goals of Simplex noise was to overcome this limitation. In addition, Simplex noise has lower computational complexity -- O(k\textsuperscript{2}) instead of O(2\textsuperscript{k})\cite{sheet-simplex}. Other benefits includes the capability to scale to higher dimensions, a well-defined and continuous gradient, as well as simpler implementation. Instead of the lattice gradients that Perlin noise works on, Simplex noise works based on simplex grids for which it was named after. This involves choosing the simplest, repeatable shape to fill a N-dimensional space. Another definition of a n-simplex would be it being the smallest figure that contains n+1 given points in n-dimensional space, while not lying in the space of a lower dimension. In one dimension, this works by choosing repeating line segments. In two dimensions, this becomes an equilateral triangle. In three dimensions, this becomes a trianglular pyramid, also known as a tetrahedron. From four dimensions and onward, this simplex becomes increasingly difficult to visualize. However, there is a pattern in the drawability of simplexes, by creating a new point and connecting it to all previously existing points.
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.75]{six simplexes}
-			\captionof{figure}{The first six simplexes \cite{higher-dim-simplexes}}
-			\label{fig:fig2}
-		\end{minipage}
-	
-		The relative simplicity of the simplex shape in having as few corners as possible makes it a lot easier to interpolate values in the interior of the shape, relative to the hypercubes used in the original Perlin noise.
-		In the original Perlin noise function, derivatives were used to compute the gradation between the points. This creates a large increase in computational complexity based on dimensionality. Simplex noise instead uses the summation of kernel values to determine the point's value. To generate the Simplex noise, the value for any point in space must be determined. In two dimensional space, this means skewing the coordinate space along the main diagonal, transforming the squashed equilateral triangles into right-angle isosceles triangles. From there, determining the location is made more simple, as just the integer part of the coordinates is needed for each dimension. Beyond two dimensions, the visualization becomes more difficult, but the methods remain the same.  
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.5]{skewed grid}
-			\captionof{figure}{Skewing in two-dimensional space and determining the cell containing a point. \cite{simplex-demyst}}
-			\label{fig:fig9}
-		\end{minipage}
-		
-		The traversal scheme for a two-dimensional simplex is built around this triangular method. If the x and y coordinates are known, then all that is needed is to determine which of the two simplices the point lies in. If x > y, the corners become (0,0), (1,0) and (1,1), else the corners are (0,0), (0,1) and (1,1). To traverse this, only one step in the x and one step in the y is needed, but in a different order for each of the simplices. This technique can then be generalized to any arbitrary amount of N dimensions \cite{simplex-demyst}. While Perlin noise has many advantages over the classical Perlin noise, it has a different visual characteristic, making it difficult to directly replace or compare the two. 
-		
-		\begin{minipage}{\textwidth}
-			\centering
-			\includegraphics[scale=.25]{perlin vs simplex}
-			\captionof{figure}{A comparison of Perlin and Simplex noise \cite{simplex-demyst}}
-			\label{fig:fig4}
-		\end{minipage}
-	
-		However, with additional modification using multiple layers or octaves, Simplex noise will run much more computationally efficiently, as well as replicating the visual quirks of Perlin noise. 
+		\section{Algorithm Advancements} 
 		
 		In addition to the advancements in noise generation, rendering techniques associated with procedural generation have had advancements as well. For example voxel-based terrain has had advances in both the front and back-end of the algorithms. Voxel-based rendering methods often use a marching cubes algorithm to both smooth voxel surfaces and increase run-times. A modified version of this algorithm was created to facilitate faster implementation and design of a level-of-detail algorithm. Some of the difficulties of this revised implementation of the Marching Cubes algorithm involved finding a suitable compression technique for the voxel map, as for larger terrains, voxel mapping will quickly grow beyond the limits of addressable memory. In addition, limiting the density of vertices, triangles and individual meshes through a level-of-detail system ensures the higher rendering performance of this revised algorithm. 
 		
